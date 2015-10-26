@@ -1,8 +1,8 @@
 /**
  * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
-
-Note: Do not modify the linked list.
-* */
+ * <p>
+ * Note: Do not modify the linked list.
+ */
 
 /**
  * Definition for singly-linked list.
@@ -15,21 +15,21 @@ Note: Do not modify the linked list.
  *     }
  * }
  */
- 
+
 public class Solution {
-    public ListNode detectCycle(ListNode head) {
-        ListNode fast = head;
-        ListNode slow = head;
-        do {
-            if (fast == null || fast.next == null) return null;
-            fast = fast.next.next;
-            slow = slow.next;
-        } while (fast != slow);
-        slow = head;
-        while (fast != slow) {
-            fast = fast.next;
-            slow = slow.next;
-        }
-        return slow;
+  public ListNode detectCycle(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    do {
+      if (fast == null || fast.next == null) return null;
+      fast = fast.next.next;
+      slow = slow.next;
+    } while (fast != slow);
+    slow = head;
+    while (fast != slow) {
+      fast = fast.next;
+      slow = slow.next;
     }
+    return slow;
+  }
 }

@@ -1,10 +1,10 @@
 /**
  * Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
-
-For example:
-Given n = 13,
-Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
-* */
+ * <p>
+ * For example:
+ * Given n = 13,
+ * Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
+ */
 
 /*
  每10个数, 有一个个位是1, 每100个数, 有10个十位是1, 每1000个数, 有100个百位是1.  做一个循环, 每次计算单个位上1得总个数(个位,十位, 百位).  
@@ -18,20 +18,20 @@ Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
 */
 
 public class Solution {
- 
-    // count number of 1 on each digit repectively, say for 212, 212 / 100 = 2, so it give you two 10, 010 and 110 then you count how many 10 starting with 210, there are three 210, 211, 212 
-    public int countDigitOne(int n) {
-        int count = 0;  
-        long factor = 1; // start from geweishu, and its counting factor is 10; counting factor is 100 for shiweishu 
-        do {
-            factor *= 10;
-            long high = n / factor;
-            long curr = (n - high * factor) / (factor / 10);
-            long low = factor == 10 ? 0 : n % (factor / 10);
-            count += high * factor / 10;
-            if (curr > 1) count += factor / 10;
-            if (curr == 1) count += low + 1;
-        } while (n >= factor);
-        return count;
-    }
+
+  // count number of 1 on each digit repectively, say for 212, 212 / 100 = 2, so it give you two 10, 010 and 110 then you count how many 10 starting with 210, there are three 210, 211, 212
+  public int countDigitOne(int n) {
+    int count = 0;
+    long factor = 1; // start from geweishu, and its counting factor is 10; counting factor is 100 for shiweishu
+    do {
+      factor *= 10;
+      long high = n / factor;
+      long curr = (n - high * factor) / (factor / 10);
+      long low = factor == 10 ? 0 : n % (factor / 10);
+      count += high * factor / 10;
+      if (curr > 1) count += factor / 10;
+      if (curr == 1) count += low + 1;
+    } while (n >= factor);
+    return count;
+  }
 }

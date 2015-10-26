@@ -1,20 +1,20 @@
 /**
  * Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty, flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.
-
-For example:
-Given a binary tree {1,2,3,4,5},
-    1
-   / \
-  2   3
- / \
-4   5
-return the root of the binary tree [4,5,2,#,#,3,1].
-   4
-  / \
- 5   2
-    / \
-   3   1  
-**/
+ * <p>
+ * For example:
+ * Given a binary tree {1,2,3,4,5},
+ * 1
+ * / \
+ * 2   3
+ * / \
+ * 4   5
+ * return the root of the binary tree [4,5,2,#,#,3,1].
+ * 4
+ * / \
+ * 5   2
+ * / \
+ * 3   1
+ **/
 
 /**
  * Definition for a binary tree node.
@@ -26,8 +26,8 @@ return the root of the binary tree [4,5,2,#,#,3,1].
  * }
  */
 public class Solution {
-    // praent -> right, right -> left, left -> parent, recurse left subtree bottom up
-    public TreeNode upsideDownBinaryTree(TreeNode root) {
+  // praent -> right, right -> left, left -> parent, recurse left subtree bottom up
+  public TreeNode upsideDownBinaryTree(TreeNode root) {
     return dfsBottomUp(root, null);
   }
 
@@ -38,16 +38,16 @@ public class Solution {
     p.right = parent;
     return root;
   }
-    
-    private TreeNode helper(TreeNode node) {
-        if (node == null || node.left == null) return node; // ERROR: node can be null, when go right
-        
-        TreeNode left = helper(node.left);
-        TreeNode right = helper(node.right);
-        TreeNode root = left;
-        while(left.right != null) left = left.right;
-        left.right = node;
-        left.left = right;
-        return root;
-    }
+
+  private TreeNode helper(TreeNode node) {
+    if (node == null || node.left == null) return node; // ERROR: node can be null, when go right
+
+    TreeNode left = helper(node.left);
+    TreeNode right = helper(node.right);
+    TreeNode root = left;
+    while (left.right != null) left = left.right;
+    left.right = node;
+    left.left = right;
+    return root;
+  }
 }

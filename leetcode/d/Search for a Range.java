@@ -1,13 +1,13 @@
 /**
- Given a sorted array of integers, find the starting and ending position of a given target value.
-
- Your algorithm's runtime complexity must be in the order of O(log n).
-
- If the target is not found in the array, return [-1, -1].
-
- For example,
- Given [5, 7, 7, 8, 8, 10] and target value 8,
- return [3, 4].
+ * Given a sorted array of integers, find the starting and ending position of a given target value.
+ * <p>
+ * Your algorithm's runtime complexity must be in the order of O(log n).
+ * <p>
+ * If the target is not found in the array, return [-1, -1].
+ * <p>
+ * For example,
+ * Given [5, 7, 7, 8, 8, 10] and target value 8,
+ * return [3, 4].
  **/
 
 public class Solution {
@@ -20,7 +20,8 @@ public class Solution {
       if (target <= nums[mid]) hi = mid - 1; // this will make lo become the lowest index of target
       else lo = mid + 1;
     }
-    if (lo == nums.length || nums[lo] != target) return new int[]{-1, -1}; // not found, hi can also be -1 if target is too small
+    if (lo == nums.length || nums[lo] != target)
+      return new int[]{-1, -1}; // not found, hi can also be -1 if target is too small
     ret[0] = lo;
     lo = 0;
     hi = nums.length - 1;

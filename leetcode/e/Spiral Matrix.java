@@ -1,15 +1,15 @@
 /**
- Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
-
- For example,
- Given the following matrix:
-
- [
- [ 1, 2, 3 ],
- [ 4, 5, 6 ],
- [ 7, 8, 9 ]
- ]
- You should return [1,2,3,6,9,8,7,4,5].
+ * Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+ * <p>
+ * For example,
+ * Given the following matrix:
+ * <p>
+ * [
+ * [ 1, 2, 3 ],
+ * [ 4, 5, 6 ],
+ * [ 7, 8, 9 ]
+ * ]
+ * You should return [1,2,3,6,9,8,7,4,5].
  **/
 
 public class Solution {
@@ -20,7 +20,7 @@ public class Solution {
     int down = matrix.length - 1;
     int left = 0;
     int right = matrix[0].length - 1;
-    while(true) {
+    while (true) {
       for (int i = left; i <= right; i++) {
         res.add(matrix[up][i]);
       }

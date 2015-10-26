@@ -1,9 +1,9 @@
 /**
  * Given a complete binary tree, count the number of nodes.
-
-Definition of a complete binary tree from Wikipedia:
-In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
-* */
+ * <p>
+ * Definition of a complete binary tree from Wikipedia:
+ * In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+ */
 
 /**
  * Definition for a binary tree node.
@@ -15,31 +15,31 @@ In a complete binary tree every level, except possibly the last, is completely f
  * }
  */
 public class Solution {
-    
-    // if left most leaf and right most leaf are at the same level, it's a perfect complete tree, return number of nodes with out counting
-    // else recurse left and right subtree
-    public int countNodes(TreeNode root) {
-        if (root == null) return 0;
-        
-        int ldepth = 0;
-        int rdepth = 0;
-        TreeNode left = root; // ERROR: root is used multiple times, must make a copy
-        while(left.left != null) {
-            left = left.left;
-            ldepth++;
-        }
-        TreeNode right = root; // ERROR: still need to copy, recursive needs root too
-        while(right.right != null) {
-            right = right.right;
-            rdepth++;
-        }
-        if (ldepth == rdepth) return (1 << (ldepth + 1)) - 1;
-        else {
-            int lnum = countNodes(root.left);
-            int rnum = countNodes(root.right);
-            return 1 + lnum + rnum;
-        }
+
+  // if left most leaf and right most leaf are at the same level, it's a perfect complete tree, return number of nodes with out counting
+  // else recurse left and right subtree
+  public int countNodes(TreeNode root) {
+    if (root == null) return 0;
+
+    int ldepth = 0;
+    int rdepth = 0;
+    TreeNode left = root; // ERROR: root is used multiple times, must make a copy
+    while (left.left != null) {
+      left = left.left;
+      ldepth++;
     }
+    TreeNode right = root; // ERROR: still need to copy, recursive needs root too
+    while (right.right != null) {
+      right = right.right;
+      rdepth++;
+    }
+    if (ldepth == rdepth) return (1 << (ldepth + 1)) - 1;
+    else {
+      int lnum = countNodes(root.left);
+      int rnum = countNodes(root.right);
+      return 1 + lnum + rnum;
+    }
+  }
     
     /*
     // TLE

@@ -1,15 +1,15 @@
 /**
  * Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
-
-For example:
-Given the following binary tree,
-   1            <---
- /   \
-2     3         <---
- \     \
-  5     4       <---
-You should return [1, 3, 4].
-* */
+ * <p>
+ * For example:
+ * Given the following binary tree,
+ * 1            <---
+ * /   \
+ * 2     3         <---
+ * \     \
+ * 5     4       <---
+ * You should return [1, 3, 4].
+ */
 
 /**
  * Definition for a binary tree node.
@@ -21,20 +21,20 @@ You should return [1, 3, 4].
  * }
  */
 public class Solution {
-    public List<Integer> rightSideView(TreeNode root) {
-        List<Integer> ret = new ArrayList<Integer>();
-        if (root == null) return ret;
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
-        q.add(root);
-        while (!q.isEmpty()) {
-            int size = q.size();
-            for (int i = 0; i <size; i++) {
-                TreeNode node = q.poll();
-                if (i == 0) ret.add(node.val);
-                if (node.right != null) q.add(node.right);
-                if (node.left != null) q.add(node.left);
-            }
-        }
-        return ret;
+  public List<Integer> rightSideView(TreeNode root) {
+    List<Integer> ret = new ArrayList<Integer>();
+    if (root == null) return ret;
+    Queue<TreeNode> q = new LinkedList<TreeNode>();
+    q.add(root);
+    while (!q.isEmpty()) {
+      int size = q.size();
+      for (int i = 0; i < size; i++) {
+        TreeNode node = q.poll();
+        if (i == 0) ret.add(node.val);
+        if (node.right != null) q.add(node.right);
+        if (node.left != null) q.add(node.left);
+      }
     }
+    return ret;
+  }
 }

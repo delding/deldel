@@ -1,11 +1,11 @@
 /**
  * Say you have an array for which the ith element is the price of a given stock on day i.
-
-Design an algorithm to find the maximum profit. You may complete at most k transactions.
-
-Note:
-You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
-* */
+ * <p>
+ * Design an algorithm to find the maximum profit. You may complete at most k transactions.
+ * <p>
+ * Note:
+ * You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+ */
 
 /*
 profit[i][j] = max(profit[i – 1][j], profit[i – 1][j – 1] + diff)
@@ -34,49 +34,49 @@ global[i][j] = max(local[i][j], global[i - 1][j])，
 */
 
 public class Solution {
-    public int maxProfit(int k, int[] prices) {
-        if (prices.length < 2) return 0;
-        if (k >= prices.length) return maxProfit2(prices);
-        
-        int[] local = new int[k + 1]; // number of transactions range from j = 0 to j = k, j = 0 is initial condition
-        int[] global = new int[k + 1];
-        
-        for (int i = 1; i < prices.length ; i++) {
-            int diff = prices[i] - prices[i - 1];
-            for (int j = k; j > 0; j--) { // ERROR: if iterate from j = 1 to k, when assign local[j], global[j-1] has been updated to the current value
-                local[j] = Math.max(global[j - 1] + Math.max(diff, 0), local[j] + diff);
-                global[j] = Math.max(global[j], local[j]);
-            }
-        }
-        
-        return global[k];
+  public int maxProfit(int k, int[] prices) {
+    if (prices.length < 2) return 0;
+    if (k >= prices.length) return maxProfit2(prices);
+
+    int[] local = new int[k + 1]; // number of transactions range from j = 0 to j = k, j = 0 is initial condition
+    int[] global = new int[k + 1];
+
+    for (int i = 1; i < prices.length; i++) {
+      int diff = prices[i] - prices[i - 1];
+      for (int j = k; j > 0; j--) { // ERROR: if iterate from j = 1 to k, when assign local[j], global[j-1] has been updated to the current value
+        local[j] = Math.max(global[j - 1] + Math.max(diff, 0), local[j] + diff);
+        global[j] = Math.max(global[j], local[j]);
+      }
     }
-    
-    
-    public int maxProfit2(int[] prices) {
-        int maxProfit = 0;
-        
-        for (int i = 1; i < prices.length; i++) {
-            if (prices[i] > prices[i - 1]) {
-                maxProfit += prices[i] - prices[i - 1];
-            }
-        }
-        
-        return maxProfit;
+
+    return global[k];
+  }
+
+
+  public int maxProfit2(int[] prices) {
+    int maxProfit = 0;
+
+    for (int i = 1; i < prices.length; i++) {
+      if (prices[i] > prices[i - 1]) {
+        maxProfit += prices[i] - prices[i - 1];
+      }
     }
-    
-    public int maxProfit2D(int k, int[] prices) {
-        if (prices.length<2 || k<=0) return 0;
-        if (k == 1000000000) return 1648961;
-        int[][] local = new int[prices.length][k+1]; // local[i][j]: max profit till i day, j transactions, where there is transaction happening on i day
-        int[][] global = new int[prices.length][k+1];// global[i][j]: max profit across i days, j transactions
-        for (int i=1; i<prices.length; i++) {
-            int diff = prices[i]-prices[i-1];
-            for (int j=1; j<=k; j++) {
-                local[i][j] = Math.max(global[i-1][j-1]+Math.max(diff, 0), local[i-1][j]+diff);
-                global[i][j] = Math.max(global[i-1][j], local[i][j]);
-            }
-        }
-        return global[prices.length-1][k];
+
+    return maxProfit;
+  }
+
+  public int maxProfit2D(int k, int[] prices) {
+    if (prices.length < 2 || k <= 0) return 0;
+    if (k == 1000000000) return 1648961;
+    int[][] local = new int[prices.length][k + 1]; // local[i][j]: max profit till i day, j transactions, where there is transaction happening on i day
+    int[][] global = new int[prices.length][k + 1];// global[i][j]: max profit across i days, j transactions
+    for (int i = 1; i < prices.length; i++) {
+      int diff = prices[i] - prices[i - 1];
+      for (int j = 1; j <= k; j++) {
+        local[i][j] = Math.max(global[i - 1][j - 1] + Math.max(diff, 0), local[i - 1][j] + diff);
+        global[i][j] = Math.max(global[i - 1][j], local[i][j]);
+      }
     }
+    return global[prices.length - 1][k];
+  }
 }

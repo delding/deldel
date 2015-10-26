@@ -1,9 +1,9 @@
 /**
- Given a collection of intervals, merge all overlapping intervals.
-
- For example,
- Given [1,3],[2,6],[8,10],[15,18],
- return [1,6],[8,10],[15,18].
+ * Given a collection of intervals, merge all overlapping intervals.
+ * <p>
+ * For example,
+ * Given [1,3],[2,6],[8,10],[15,18],
+ * return [1,6],[8,10],[15,18].
  **/
 
 import java.lang.Object;
@@ -27,7 +27,7 @@ public class Solution {
         else return i1.start - i2.start;
       }
     });
-    int len =intervals.size();
+    int len = intervals.size();
     for (int i = 1; i < len; ) {
       Interval pre = intervals.get(i - 1);
       Interval cur = intervals.get(i);

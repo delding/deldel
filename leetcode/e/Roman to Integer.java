@@ -1,7 +1,7 @@
 /**
- Given a roman numeral, convert it to an integer.
-
- Input is guaranteed to be within the range from 1 to 3999.
+ * Given a roman numeral, convert it to an integer.
+ * <p>
+ * Input is guaranteed to be within the range from 1 to 3999.
  **/
 
 // I, II, III, IV, V, VI, VII, VIII, IX, X, L 50, C	100, D 500, M 1,000

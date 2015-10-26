@@ -1,6 +1,6 @@
 /**
  * Given a linked list, determine if it has a cycle in it.
- * */
+ */
 
 /**
  * Definition for singly-linked list.
@@ -14,14 +14,14 @@
  * }
  */
 public class Solution {
-    public boolean hasCycle(ListNode head) {
-        ListNode fast = head;
-        ListNode slow = head;
-        do {
-            if (fast == null || fast.next == null) return false;
-            fast = fast.next.next;
-            slow = slow.next;
-        } while (fast != slow);
-        return true;
-    }
+  public boolean hasCycle(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    do {
+      if (fast == null || fast.next == null) return false;
+      fast = fast.next.next;
+      slow = slow.next;
+    } while (fast != slow);
+    return true;
+  }
 }

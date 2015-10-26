@@ -1,22 +1,22 @@
 /**
- Implement regular expression matching with support for '.' and '*'.
-
- '.' Matches any single character.
- '*' Matches zero or more of the preceding element.
-
- The matching should cover the entire input string (not partial).
-
- The function prototype should be:
- bool isMatch(const char *s, const char *p)
-
- Some examples:
- isMatch("aa","a") → false
- isMatch("aa","aa") → true
- isMatch("aaa","aa") → false
- isMatch("aa", "a*") → true
- isMatch("aa", ".*") → true
- isMatch("ab", ".*") → true
- isMatch("aab", "c*a*b") → true
+ * Implement regular expression matching with support for '.' and '*'.
+ * <p>
+ * '.' Matches any single character.
+ * '*' Matches zero or more of the preceding element.
+ * <p>
+ * The matching should cover the entire input string (not partial).
+ * <p>
+ * The function prototype should be:
+ * bool isMatch(const char *s, const char *p)
+ * <p>
+ * Some examples:
+ * isMatch("aa","a") → false
+ * isMatch("aa","aa") → true
+ * isMatch("aaa","aa") → false
+ * isMatch("aa", "a*") → true
+ * isMatch("aa", ".*") → true
+ * isMatch("ab", ".*") → true
+ * isMatch("aab", "c*a*b") → true
  **/
 
 public class Solution {
@@ -38,8 +38,7 @@ public class Solution {
       if (p.charAt(pi) == '.' || p.charAt(pi) == s.charAt(si)) {
         return match(s, p, si + 1, pi + 1);
       } else return false;
-    }
-    else {
+    } else {
       if (p.charAt(pi) == '.') {
         for (int i = si; i <= s.length(); i++) { // bug, should <= not <, i = si means not use .*, i = s.length means match every thing left in s
           if (match(s, p, i, pi + 2)) return true;
@@ -77,7 +76,8 @@ public class Solution {
       } else {
         // if first char doesn't match, pattern string's second char must be '*'
         // the first two char of pattern string can be ignored
-        return (p.charAt(1) == '*') && isMatch(s, p.substring(2));}
+        return (p.charAt(1) == '*') && isMatch(s, p.substring(2));
+      }
     }
   }
 }

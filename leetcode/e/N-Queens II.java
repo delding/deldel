@@ -1,11 +1,12 @@
 /**
- Follow up for N-Queens problem.
-
- Now, instead outputting board configurations, return the total number of distinct solutions.
+ * Follow up for N-Queens problem.
+ * <p>
+ * Now, instead outputting board configurations, return the total number of distinct solutions.
  **/
 
 public class Solution {
   int count = 0;
+
   public int totalNQueens(int n) {
     char[][] board = new char[n][n];
     for (int i = 0; i < board.length; i++) {

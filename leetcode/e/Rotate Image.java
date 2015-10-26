@@ -1,10 +1,10 @@
 /**
  * You are given an n x n 2D matrix representing an image.
-
- Rotate the image by 90 degrees (clockwise).
-
- Follow up:
- Could you do this in-place?
+ * <p>
+ * Rotate the image by 90 degrees (clockwise).
+ * <p>
+ * Follow up:
+ * Could you do this in-place?
  */
 
 public class Solution {
@@ -20,7 +20,7 @@ public class Solution {
       for (int i = 0; i < right - left; i++) {
         int tmp = matrix[top][left + i];
         matrix[top][left + i] = matrix[bot - i][left];
-        matrix[bot - i][left]= matrix[bot][right - i];
+        matrix[bot - i][left] = matrix[bot][right - i];
         matrix[bot][right - i] = matrix[top + i][right];
         matrix[top + i][right] = tmp;
       }

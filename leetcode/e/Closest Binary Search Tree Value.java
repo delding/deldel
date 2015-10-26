@@ -1,10 +1,11 @@
 /**
  * Given a non-empty binary search tree and a target value, find the value in the BST that is closest to the target.
+ * <p>
+ * Note:
+ * Given target value is a floating point.
+ * You are guaranteed to have only one unique value in the BST that is closest to the target.
+ */
 
-Note:
-Given target value is a floating point.
-You are guaranteed to have only one unique value in the BST that is closest to the target.
-* */
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -14,32 +15,32 @@ You are guaranteed to have only one unique value in the BST that is closest to t
  *     TreeNode(int x) { val = x; }
  * }
  */
- 
+
 public class Solution {
-   
-    public int closestValue(TreeNode root, double target) {
-        int big = root.val; // record next small and next big value of current node
-        int small = root.val;
-        while (true) {
-            if(target < root.val) {
-                if (root.left != null) {
-                    big = root.val; // go left update big
-                    root = root.left;
-                } else { // current node is big, so closest value between current node and next small
-                    if (Math.abs(target - root.val) < Math.abs(target - small)) return root.val;
-                    else return small;
-                }
-            } else {
-                if (root.right != null) {
-                    small = root.val; // go right update small
-                    root = root.right;
-                } else { // curr is small, so closeset between curr and next big
-                    if (Math.abs(target - root.val) < Math.abs(target - big)) return root.val;
-                    else return big;
-                }
-            }
+
+  public int closestValue(TreeNode root, double target) {
+    int big = root.val; // record next small and next big value of current node
+    int small = root.val;
+    while (true) {
+      if (target < root.val) {
+        if (root.left != null) {
+          big = root.val; // go left update big
+          root = root.left;
+        } else { // current node is big, so closest value between current node and next small
+          if (Math.abs(target - root.val) < Math.abs(target - small)) return root.val;
+          else return small;
         }
+      } else {
+        if (root.right != null) {
+          small = root.val; // go right update small
+          root = root.right;
+        } else { // curr is small, so closeset between curr and next big
+          if (Math.abs(target - root.val) < Math.abs(target - big)) return root.val;
+          else return big;
+        }
+      }
     }
+  }
     /* 
     // update closest value for every node on the path
     public int closestValue(TreeNode root, double target) {
@@ -55,5 +56,5 @@ public class Solution {
         return closestVal;
     }
     */
-        
+
 }

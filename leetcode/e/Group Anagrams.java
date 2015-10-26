@@ -2,20 +2,20 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- Given an array of strings, group anagrams together.
-
- For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"],
- Return:
-
- [
- ["ate", "eat","tea"],
- ["nat","tan"],
- ["bat"]
- ]
- Note:
- For the return value, each inner list's elements must follow the lexicographic order.
- All inputs will be in lower-case.
-**/
+ * Given an array of strings, group anagrams together.
+ * <p>
+ * For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"],
+ * Return:
+ * <p>
+ * [
+ * ["ate", "eat","tea"],
+ * ["nat","tan"],
+ * ["bat"]
+ * ]
+ * Note:
+ * For the return value, each inner list's elements must follow the lexicographic order.
+ * All inputs will be in lower-case.
+ **/
 
 public class Solution {
   public List<List<String>> groupAnagrams(String[] strs) {

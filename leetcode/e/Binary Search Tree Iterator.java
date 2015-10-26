@@ -1,10 +1,10 @@
 /**
  * Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
-
-Calling next() will return the next smallest number in the BST.
-
-Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
-* */
+ * <p>
+ * Calling next() will return the next smallest number in the BST.
+ * <p>
+ * Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
+ */
 
 /**
  * Definition for binary tree
@@ -17,32 +17,32 @@ Note: next() and hasNext() should run in average O(1) time and uses O(h) memory,
  */
 
 public class BSTIterator {
-    
-    Stack<TreeNode> smallnodes = new Stack<TreeNode>();
 
-    public BSTIterator(TreeNode root) {
-        while (root != null) {
-            smallnodes.push(root);
-            root= root.left;
-        }    
-    }
+  Stack<TreeNode> smallnodes = new Stack<TreeNode>();
 
-    /** @return whether we have a next smallest number */
-    public boolean hasNext() {
-        return !smallnodes.isEmpty();
+  public BSTIterator(TreeNode root) {
+    while (root != null) {
+      smallnodes.push(root);
+      root = root.left;
     }
+  }
 
-    /** @return the next smallest number */
-    public int next() {
-        TreeNode curr = smallnodes.pop();
-        int ret = curr.val;
-        curr = curr.right;
-        while (curr != null) {
-            smallnodes.push(curr);
-            curr = curr.left;
-        }
-        return ret;
+  /** @return whether we have a next smallest number */
+  public boolean hasNext() {
+    return !smallnodes.isEmpty();
+  }
+
+  /** @return the next smallest number */
+  public int next() {
+    TreeNode curr = smallnodes.pop();
+    int ret = curr.val;
+    curr = curr.right;
+    while (curr != null) {
+      smallnodes.push(curr);
+      curr = curr.left;
     }
+    return ret;
+  }
 }
 
 /**
