@@ -28,7 +28,7 @@ public class Solution {
     return maxLen;
   }
 
-  // Todo: O(nlogn)
+  // todo: O(nlogn)
   // M[j] — stores the index k of the smallest value X[k] such that there is an increasing subsequence of length j ending at X[k] on the range k ≤ i.
   public int lengthOfLIS(int[] nums) {
     int maxLen = 0; // intialize to 0 for empty array input

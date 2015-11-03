@@ -18,6 +18,7 @@
  * There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...[2 3], [4 5], [7 5], [11 5], [12 7]...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...[2 3], [4 5], [12 7], ...]
  */
 
+// todo
 // Solution 1, maxQueue, has bugs    
 // sort by left point (input already did), maintain skyline height and right, if current building's left smaller than skyline right, put current
 // building's right with height in max-heap, update current skyline height to be max of two; if next buidling'left bigger than current building's right,
