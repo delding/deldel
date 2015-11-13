@@ -12,9 +12,8 @@
  */
 
 class MyStack {
-  Queue<Integer> q1 = new LinkedList();
-  Queue<Integer> q2 = new LinkedList();
-
+  Queue<Integer> q1 = new ArrayDeque();
+  Queue<Integer> q2 = new ArrayDeque();
   // Push element x onto stack.
   public void push(int x) {
     if (!q2.isEmpty()) q2.add(x);
