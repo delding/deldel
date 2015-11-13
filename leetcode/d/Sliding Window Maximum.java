@@ -24,43 +24,16 @@
 public class Solution {
   public int[] maxSlidingWindow(int[] nums, int k) {
     if (k == 0) return new int[0];
-    int[] max = new int[nums.length - k + 1]; // ERROR: only take max value after window is filled up
-    Deque<Value> window = new LinkedList<Value>();
+    int[] max = new int[nums.length - k + 1];
+    Deque<Integer> window = new ArrayDeque<>();
     for (int i = 0; i < nums.length; i++) {
-      enqueue(window, k, nums[i], i);
+      while (!window.isEmpty() && window.peekFirst() + k <= i) window.pollFirst();
+      while (!window.isEmpty() && nums[window.peekLast()] <= nums[i]) window.pollLast();
+      window.addLast(i);
       if (i >= k - 1) {
-        max[i - k + 1] = window.peekFirst().val;
+        max[i - k + 1] = nums[window.peekFirst()];
       }
     }
     return max;
-  }
-
-  private void enqueue(Deque<Value> q, int k, int value, int i) {
-    if (q.isEmpty()) { // ERROR: don't forget empty queue case when initializaion
-      q.add(new Value(value, i));
-      return;
-    }
-    Value max = q.peekFirst();
-    if (i - max.index == k) {
-      q.pollFirst();
-      max = q.peekFirst();
-    }
-    if (max == null || max.val <= value) {
-      while (!q.isEmpty()) q.poll();
-      q.add(new Value(value, i));
-    } else {
-      while (q.peekLast().val <= value) q.pollLast();
-      q.addLast(new Value(value, i));
-    }
-  }
-
-  private class Value {
-    int val;
-    int index;
-
-    Value(int v, int i) {
-      val = v;
-      index = i;
-    }
   }
 }

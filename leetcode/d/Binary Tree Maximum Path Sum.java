@@ -1,11 +1,8 @@
 /**
  * Given a binary tree, find the maximum path sum.
- * <p>
  * For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path does not need to go through the root.
- * <p>
  * For example:
  * Given the below binary tree,
- * <p>
  * 1
  * / \
  * 2   3
@@ -22,7 +19,6 @@
  * }
  */
 public class Solution {
-
   // consider a funtion that returns max path sum containing that node as an end vertex
   // maxpath can be max(node.val, node.val + left, node.val + right, node.val + left + right), because val can be minus
   // compare maxpath on all nodes and use a global variable store the global max
@@ -42,5 +38,4 @@ public class Solution {
     globalmax = Math.max(globalmax, max);
     return mmax;
   }
-
 }
