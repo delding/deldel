@@ -1,31 +1,34 @@
-/*
- * Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
-
-Note:
-You must not modify the array (assume the array is read only).
-You must use only constant, O(1) extra space.
-Your runtime complexity should be less than O(n2).
-There is only one duplicate number in the array, but it could be repeated more than once.
-* /
+/**
+ * Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive),
+ * prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+ * <p>
+ * Note:
+ * You must not modify the array (assume the array is read only).
+ * You must use only constant, O(1) extra space.
+ * Your runtime complexity should be less than O(n2).
+ * There is only one duplicate number in the array, but it could be repeated more than once.
+ **/
 
 public class Solution {
-    public int findDuplicate(int[] nums) {
-        // array nums[] is defined by a function f(i) = nums[i], domain and range are both [1, n]
-        // since index 0 is not in [1, n], start position should be i = nums[0], no need to consider the case of jumping back to index 0
-        int n = nums.length;
-        int slow = nums[0], fast = nums[0];
-        do {
-            slow = nums[slow];
-            fast = nums[fast];
-            fast = nums[fast];
-        } while (slow != fast);
-        fast = nums[0];
-        while (fast != slow) {
-            slow = nums[slow];
-            fast = nums[fast];
-        }
-        return slow;
+  public int findDuplicate(int[] nums) {
+    // array nums[] is defined by a function f(i) = nums[i], domain and range are both [1, n]
+    // since index 0 is not in [1, n], start position should be i = nums[0], no need to consider
+    // the case of jumping back to index 0
+    int n = nums.length;
+    int slow = nums[0], fast = nums[0];
+    do {
+      slow = nums[slow];
+      fast = nums[fast];
+      fast = nums[fast];
+    } while (slow != fast);
+    fast = nums[0];
+    while (fast != slow) {
+      slow = nums[slow];
+      fast = nums[fast];
     }
+    return slow;
+  }
+}
 /*
 # This problem (reportedly) took CS legend Don Knuth twenty-four hours to solve
 # and I have only met one person (Keith Amling) who could solve it in less time
@@ -106,4 +109,4 @@ public class Solution {
 # constant space.  This algorithm is often referred to as the "tortoise and
 # hare" algorithm
 */
-}
+
