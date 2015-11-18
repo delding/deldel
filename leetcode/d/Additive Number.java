@@ -23,7 +23,7 @@ public class Solution {
   }
 
   private boolean isAdditive(String num, String num1, String num2) {
-    if (num.isEmpty()) return false; // num1 and num2 consume all of the string
+    if (num.isEmpty()) return false; // num1 and num2 consume all of the num
     if (!num1.isEmpty() && !num2.isEmpty() && num.equals(add(num1, num2))) return true;
     if (num1.isEmpty()) {
       if (num.charAt(0) == '0') {
