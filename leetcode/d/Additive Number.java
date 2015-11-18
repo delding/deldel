@@ -22,6 +22,8 @@ public class Solution {
     return isAdditive(num, "", "");
   }
 
+  // O(n^3) n is the length of num, since there are n^2 different pairs of num1 and num2,
+  // and for each pair there needs a linear scan to check if the remaining is valid for additive number
   private boolean isAdditive(String num, String num1, String num2) {
     if (num.isEmpty()) return false; // num1 and num2 consume all of the num
     if (!num1.isEmpty() && !num2.isEmpty() && num.equals(add(num1, num2))) return true;
