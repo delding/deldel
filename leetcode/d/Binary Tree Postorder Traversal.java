@@ -1,6 +1,5 @@
 /**
  * Given a binary tree, return the postorder traversal of its nodes' values.
- * <p>
  * For example:
  * Given binary tree {1,#,2,3},
  * 1
@@ -20,6 +19,7 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+
 public class Solution {
   public List<Integer> postorderTraversal(TreeNode root) {
     List<Integer> ret = new ArrayList<Integer>();

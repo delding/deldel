@@ -18,8 +18,8 @@
 */
 
 public class Solution {
-
-  // count number of 1 on each digit repectively, say for 212, 212 / 100 = 2, so it give you two 10, 010 and 110 then you count how many 10 starting with 210, there are three 210, 211, 212
+  // count number of 1 on each digit repectively, say for 212, 212 / 100 = 2, so it give you two 10, 010 and 110 then
+  // you count how many 10 starting with 210, there are three 210, 211, 212
   public int countDigitOne(int n) {
     int count = 0;
     long factor = 1; // start from geweishu, and its counting factor is 10; counting factor is 100 for shiweishu

@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 /**
  * Implement wildcard pattern matching with support for '?' and '*'.
  * <p>

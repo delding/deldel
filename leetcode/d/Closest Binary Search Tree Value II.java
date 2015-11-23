@@ -1,6 +1,5 @@
 /**
  * Given a non-empty binary search tree and a target value, find k values in the BST that are closest to the target.
- * <p>
  * Note:
  * Given target value is a floating point.
  * You may assume k is always valid, that is: k ≤ total nodes.

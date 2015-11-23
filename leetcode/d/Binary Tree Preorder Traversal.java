@@ -1,6 +1,5 @@
 /**
  * Given a binary tree, return the preorder traversal of its nodes' values.
- * <p>
  * For example:
  * Given binary tree {1,#,2,3},
  * 1

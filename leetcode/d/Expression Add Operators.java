@@ -1,5 +1,6 @@
 /**
- * Given a string that contains only digits 0-9 and a target value, return all possibilities to add binary operators (not unary) +, -, or * between the digits so they evaluate to the target value.
+ * Given a string that contains only digits 0-9 and a target value, return all possibilities to add
+ * binary operators (not unary) +, -, or * between the digits so they evaluate to the target value.
  * <p>
  * Examples:
  * "123", 6 -> ["1+2+3", "1*2*3"]
@@ -30,9 +31,7 @@ public class Solution {
         helper(rst, path + cur, num, target, i + 1, cur, cur);
       } else {
         helper(rst, path + "+" + cur, num, target, i + 1, eval + cur, cur);
-
         helper(rst, path + "-" + cur, num, target, i + 1, eval - cur, -cur);
-
         helper(rst, path + "*" + cur, num, target, i + 1, eval - multed + multed * cur, multed * cur);
       }
     }

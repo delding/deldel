@@ -1,6 +1,3 @@
-import java.lang.String;
-import java.lang.StringBuilder;
-
 /**
  * Given two numbers represented as strings, return multiplication of the numbers as a string.
  * <p>
@@ -30,7 +27,6 @@ public class Solution {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < len; i++) {
       if (i == 0 && ret[i] == 0) continue;
-      ;
       sb.append(ret[i]);
     }
     return sb.toString();

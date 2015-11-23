@@ -1,8 +1,6 @@
 /**
  * Given a pattern and a string str, find if str follows the same pattern.
- * <p>
  * Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty substring in str.
- * <p>
  * Examples:
  * pattern = "abab", str = "redblueredblue" should return true.
  * pattern = "aaaa", str = "asdasdasdasd" should return true.
@@ -29,7 +27,7 @@ public class Solution {
       map.put(p.substring(0, 1), word);
       invert.put(word, p.substring(0, 1));
       if (match(p.substring(1), str.substring(i + 1), map, invert)) return true;
-      map.remove(p.substring(0, 1), word);
+      map.remove(p.substring(0, 1));
       invert.remove(word);
     }
     return false;

@@ -1,6 +1,5 @@
 /**
  * Divide two integers without using multiplication, division and mod operator.
- * <p>
  * If it is overflow, return MAX_INT.
  **/
 

@@ -1,5 +1,6 @@
 /**
- * Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it. Find and return the shortest palindrome you can find by performing this transformation.
+ * Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it.
+ * Find and return the shortest palindrome you can find by performing this transformation.
  * <p>
  * For example:
  * <p>
@@ -18,7 +19,6 @@ public class Solution {
     int extra = s.length() - lps[lps.length - 1];
     return reverse.substring(0, extra) + s;
   }
-
 
   private int[] lps(String pattern) {
     // use prefix of pattern to match suffix of pattern, so as to compute the longest prefix which is also suffix

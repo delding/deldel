@@ -1,10 +1,8 @@
 /**
  * Given an unsorted integer array, find the first missing positive integer.
- * <p>
  * For example,
  * Given [1,2,0] return 3,
  * and [3,4,-1,1] return 2.
- * <p>
  * Your algorithm should run in O(n) time and uses constant space.
  **/
 
@@ -15,13 +13,13 @@ public class Solution {
   }
 }
 
-
 public class Solution {
   public int firstMissingPositive(List<Integer> nums) {
     int N = nums.size();
     if (nums.size() == 0) return 1;
     for (int i = 0; i < nums.size(); i++) {
-      while (nums.get(i) != i + 1 && nums.get(i) > 0 && nums.get(i) <= N && nums.get(nums.get(i) - 1) != nums.get(i)) { // keep swapping, until the value in A[i] is legal, eighter it's i+1 or it's out of range [1, N]
+      // keep swapping, until the value in A[i] is legal, eigher it's i+1 or it's out of range [1, N]
+      while (nums.get(i) != i + 1 && nums.get(i) > 0 && nums.get(i) <= N && nums.get(nums.get(i) - 1) != nums.get(i)) {
         swap(nums, i, nums.get(i) - 1);
       }
     }

@@ -20,16 +20,14 @@ public class Solution {
     int hi = nums.length - 1;
     while (lo <= hi) {
       int mid = lo + (hi - lo) / 2;
-      if (nums[lo] == nums[mid] && nums[mid] == nums[hi]) {
-        if (lo == hi) // ERROR: must take min, if lo = hi, which means the value will be lost after lo++, if lo < hi array still has mutiple number of this value, no need to check
-          min = Math.min(nums[lo], min);
-        lo++;
-      } else if (nums[lo] <= nums[mid]) {
-        min = Math.min(nums[lo], min);
+      if (nums[mid] < nums[hi]) {
+        min = Math.min(min, nums[mid]);
+        hi = mid - 1;
+      } else if (nums[mid] > nums[lo]) {
+        min = Math.min(min, nums[lo]);
         lo = mid + 1;
       } else {
-        min = Math.min(nums[mid], min);
-        hi = mid - 1;
+        min = Math.min(min, nums[lo++]);
       }
     }
     return min;

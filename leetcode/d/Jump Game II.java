@@ -27,19 +27,21 @@ public class Solution {
   }
 
   // greedy algo
-  // Maintain two reaches, one is the previous max reach, another is the current max reach
-  // When we run out of the previous max reach, it's time to add one more step
-  public int jump(int[] nums) {
-    int pre = 0;
-    int cur = 0;
-    int step = 0;
-    for (int i = 0; i < nums.length; i++) {
-      if (pre < i) { // bug, use < instead of ==, since == means I am already here, if don't move further don't need more steps
-        step++;
-        pre = cur;
+  // When we run out of the current max reach, it's time to add one more jump
+  public class Solution {
+    public int jump(int[] nums) {
+      int curreach = 0;
+      int nextreach = 0;
+      int jump = 0;
+      for (int i = 0; i < nums.length; i++) {
+        if (curreach >= nums.length - 1) return jump;
+        nextreach = Math.max(nextreach, i + nums[i]);
+        if (curreach == i) {
+          jump++;
+          curreach = nextreach;
+        }
       }
-      cur = Math.max(cur, i + nums[i]); // bug, must let pre update first
+      return -1;
     }
-    return step;
   }
 }

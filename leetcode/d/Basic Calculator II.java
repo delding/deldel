@@ -1,10 +1,7 @@
 /**
  * Implement a basic calculator to evaluate a simple expression string.
- * <p>
  * The expression string contains only non-negative integers, +, -, *, / operators and empty spaces . The integer division should truncate toward zero.
- * <p>
  * You may assume that the given expression is always valid.
- * <p>
  * Some examples:
  * "3+2*2" = 7
  * " 3/2 " = 1

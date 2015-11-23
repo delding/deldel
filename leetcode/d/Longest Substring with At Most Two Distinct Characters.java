@@ -51,6 +51,5 @@ public class Solution {
     }
     maxlen = Math.max(maxlen, numchar1 + numchar2); // ERROR: update for last string when j moves out of bound legally
     return maxlen;
-
   }
 }

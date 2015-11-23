@@ -23,7 +23,8 @@
 public class Solution {
   // We call this the Step-wise Linear Search method. Similar to Diagonal Binary Search, we begin with the upper right corner
   // (or the bottom left corner). Instead of traversing diagonally each step, we traverse one step to the left or bottom.
-  // Essentially, each step we are able to eliminate either a row or a column. The worst case scenario is where it ended up in the opposite corner of the matrix, which takes at most 2n steps
+  // Essentially, each step we are able to eliminate either a row or a column. The worst case scenario is where it ended
+  // up in the opposite corner of the matrix, which takes at most 2n steps
   public boolean searchMatrix(int[][] matrix, int target) {
     // matrix[i][j] is always the biggest in its row and smallest in its column
     if (matrix.length == 0) return false;

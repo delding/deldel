@@ -1,8 +1,6 @@
 /**
  * Given a string s, partition s such that every substring of the partition is a palindrome.
- * <p>
  * Return the minimum cuts needed for a palindrome partitioning of s.
- * <p>
  * For example, given s = "aab",
  * Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut.
  */
@@ -27,7 +25,7 @@ public class Solution {
 
     int[] mincut = new int[s.length()];
     mincut[0] = 0; // single char needs zero cut
-    int prev[] = new int[s.length()]; // not use prev to recover cut string for this problem
+    int prev[] = new int[s.length()]; // not using prev to recover cut string for this problem
     prev[0] = -1;
 
     for (int j = 1; j < s.length(); j++) {

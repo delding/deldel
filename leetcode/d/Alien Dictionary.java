@@ -1,5 +1,7 @@
 /**
- * There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+ * There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you.
+ * You receive a list of words from the dictionary, where words are sorted lexicographically by the rules of this new language.
+ * Derive the order of letters in this language.
  * <p>
  * For example,
  * Given the following words in dictionary,
@@ -56,7 +58,6 @@ public class Solution {
         return; // Error: must only add the first different char pair as an edge
       }
     }
-
   }
 
   private String topoSort(Map<Character, HashSet<Character>> adj, HashMap<Character, Boolean> visited, HashMap<Character, Boolean> visiting) {

@@ -15,7 +15,7 @@ public class Solution {
   }
 
   int findKthSmallest(int k, int[] A, int[] B, int aFirst, int aLast, int bFirst, int bLast) {
-    if (aFirst > aLast) return B[bFirst + k - 1]; // bug, edge case
+    if (aFirst > aLast) return B[bFirst + k - 1]; // Bug, edge case
     if (bFirst > bLast) return A[aFirst + k - 1];
     int aMid = (aFirst + aLast) / 2;
     int bMid = (bFirst + bLast) / 2;

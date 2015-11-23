@@ -1,11 +1,10 @@
 /**
  * Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
- * <p>
  * Note:
  * You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
- * <p>
  * Follow up:
- * What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+ * What if the BST is modified (insert/delete operations) often and you need to find the kth smallest
+ * frequently? How would you optimize the kthSmallest routine?
  * The optimal runtime complexity is O(height of BST).
  */
 
