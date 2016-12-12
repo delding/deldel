@@ -18,25 +18,22 @@
 public class Solution {
   public List<List<Integer>> combinationSum2(int[] candidates, int target) {
     Arrays.sort(candidates);
-    List<List<Integer>> ret = new ArrayList<>();
-    dfs(candidates, target, 0, new ArrayList<Integer>(), ret);
-    return ret;
+    List<List<Integer>> combs = new ArrayList<>();
+    dfs(candidates, target, combs, new ArrayList<Integer>(), 0);
+    return combs;
   }
 
-  private void dfs(int[] candidates, int target, int idx, List<Integer> cur, List<List<Integer>> ret) {
-    if (target < 0) return;
-    if (target == 0) {
-      List<Integer> copy = new ArrayList<Integer>(cur);
-      ret.add(copy);
-      return;
-    }
-    int pre = -1;
-    for (int i = idx; i < candidates.length; i++) {
-      if (candidates[i] == pre) continue;
-      pre = candidates[i];
-      cur.add(pre);
-      dfs(candidates, target - pre, i + 1, cur, ret);
-      cur.remove(cur.size() - 1);
+  void dfs(int[] cand, int target, List<List<Integer>> combs, List<Integer> comb, int idx) {
+    if (target == 0) combs.add(new ArrayList<>(comb));
+    else {
+      for (int i = idx; i < cand.length; i++) {
+        if (i > idx && cand[i] == cand[i - 1]) continue;
+        if (cand[i] <= target) {
+          comb.add(cand[i]);
+          dfs(cand, target - cand[i], combs, comb, i + 1);
+          comb.remove(comb.size() - 1);
+        }
+      }
     }
   }
 }

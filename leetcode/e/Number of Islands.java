@@ -19,31 +19,62 @@
  */
 
 public class Solution {
+  // bfs
   public int numIslands(char[][] grid) {
     int m = grid.length;
-    if (m == 0) return 0;
+    if (m == 0 || grid[0].length == 0) return 0;
     int n = grid[0].length;
-    int count = 0;
+    int num = 0;
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
         if (grid[i][j] == '1') {
-          count++;
-          dfs(grid, m, n, i, j);
+          num++;
+          grid[i][j] = '0';
+          Deque<Integer> q = new ArrayDeque<>();
+          q.offer(i * n + j);
+          while (!q.isEmpty()) {
+            int cell = q.poll();
+            int x = cell / n;
+            int y = cell % n;
+            for (int[] dir : dirs) {
+              int xx = x + dir[0];
+              int yy = y + dir[1];
+              if (xx >= 0 && xx < m && yy >= 0 && yy < n && grid[xx][yy] == '1') {
+                grid[xx][yy] = '0';
+                q.offer(xx * n + yy);
+              }
+            }
+          }
         }
       }
     }
-    return count;
+    return num;
+  }
+  // dfs
+  public int numIslandsDFS(char[][] grid) {
+    int m = grid.length;
+    if (m == 0 || grid[0].length == 0) return 0;
+    int n = grid[0].length;
+    int num = 0;
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        if (grid[i][j] == '1') {
+          num++;
+          dfs(i, j, grid);
+        }
+      }
+    }
+    return num;
   }
 
-  private void dfs(char[][] grid, int m, int n, int i, int j) {
-    int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    grid[i][j] = '2';
+  static int[][] dirs = new int[][] {{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+
+  void dfs(int i, int j, char[][] grid) {
+    grid[i][j] = '0';
     for (int[] dir : dirs) {
       int x = i + dir[0];
       int y = j + dir[1];
-      if (x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == '1') {
-        dfs(grid, m, n, x, y);
-      }
+      if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] == '1') dfs(x, y, grid);
     }
   }
 }

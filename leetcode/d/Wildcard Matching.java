@@ -19,9 +19,66 @@
  * isMatch("aab", "c*a*b") → false
  **/
 
-// TLE even if use memoization, todo
+
 public class Solution {
-  public boolean isMatch(String s, String p) {
+	// dp
+	public boolean isMatch(String s, String p) {
+		boolean[][] match = new boolean[s.length() + 1][p.length() + 1];
+		for (int i = 0; i <= p.length(); i++) {
+			match[0][i] = i == 0 || p.charAt(i - 1) == '*';
+			if (!match[0][i]) break;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			for (int j = 0; j < p.length(); j++) {
+				if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '?') {
+					match[i + 1][j + 1] = match[i][j];
+				} else if (p.charAt(j) == '*') {
+					match[i + 1][j + 1] = match[i + 1][j] || match[i][j + 1]; // * match 0 char or * match 1 char
+				} else {
+					match[i + 1][j + 1] = false;
+				}
+			}
+		}
+		return match[s.length()][p.length()];
+	}
+
+	// two pointers to hold the backup positions for pointers is,ip in s,p
+	public boolean isMatch1(String s, String p) {
+		for (int is = 0, ip = 0, mark = -1, star = -1; is <= s.length() && ip <= p.length();) {
+			if (is == s.length() || ip == p.length()) {
+				if (is == s.length() && ip == p.length()) return true;
+				else if (is == s.length()) {
+					if (p.charAt(ip) != '*') return false;
+					else ip++;
+				} else {
+					if (star != -1) {
+						ip = star + 1;
+						is = mark++;
+					} else {
+						return false;
+					}
+				}
+			} else {
+				if (s.charAt(is) == p.charAt(ip) || p.charAt(ip) == '?') {
+					is++;
+					ip++;
+				} else if (p.charAt(ip) == '*') {
+					star = ip++;
+					mark = is + 1;
+				} else {
+					if (star != -1) {
+						ip = star + 1;
+						is = mark++;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+  // TLE even if use memoization, todo
+  public boolean isMatch2(String s, String p) {
     if (s.isEmpty() || p.isEmpty()) return s.isEmpty() && p.isEmpty();
     char c = p.charAt(0);
     if (c == '?') {
@@ -36,34 +93,5 @@ public class Solution {
       if (s.charAt(0) != c) return false;
       else return isMatch(s.substring(1), p.substring(1));
     }
-  }
-
-
-  // The trick is to maintain two pointers to hold the backup positions for pointers i,j in s,p
-  // Once we find that s.substring(i, j) can not be replaced by '*', we try s.subtring(i+1,j).
-  public boolean isMatch2(String s, String p) {
-    int i = 0;
-    int j = 0;
-    int star = -1;
-    int mark = -1;
-    while (i < s.length()) {
-      if (j < p.length()
-          && (p.charAt(j) == '?' || p.charAt(j) == s.charAt(i))) {
-        ++i;
-        ++j;
-      } else if (j < p.length() && p.charAt(j) == '*') { // only need to mark most recent '*', ab*cd* is better than ab*
-        star = j++;
-        mark = i; // first time meet '*', match nothing in s
-      } else if (star != -1) {
-        j = star + 1; // if not match og back to '*'
-        i = ++mark; // match out one more char in s
-      } else {
-        return false;
-      }
-    }
-    while (j < p.length() && p.charAt(j) == '*') {
-      ++j;
-    }
-    return j == p.length();
   }
 }

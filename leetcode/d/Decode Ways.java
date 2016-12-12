@@ -11,48 +11,53 @@
  */
 
 public class Solution {
+
   public int numDecodings(String s) {
-    if (s.isEmpty()) return 0; // ERROR: guard empty string
-    Map<String, Integer> memo = new HashMap();
-    //return ways(s, memo);
-    return ways(s);
+    if (s.length() == 0) return 0; // must check
+    Map<Integer, Integer> memo = new HashMap<>();
+    return ways(s, memo);
   }
 
-  // top-down recursive dp
-  private int ways(String s, Map<String, Integer> memo) { // ERROR: must memoization
-    if (memo.containsKey(s)) return memo.get(s);
-    if (s.length() == 0)
-      return 1; // ERROR: guarantee empty string only results from valid prefix, so return 1
-    if (s.length() == 1) { // ERROR: '0' is invalid, if end up with '0' return 0
-      if (isValid(s)) return 1;
-      else return 0;
-    }
-    int num = 0;
-    if (isValid(s.substring(0, 1))) num += ways(s.substring(1), memo);
-    if (isValid(s.substring(0, 2))) num += ways(s.substring(2), memo);
-    memo.put(s, num);
+  int ways(String s, Map<Integer, Integer> memo) {
+    if (s.length() == 0) return 1;
+    if (s.startsWith("0")) return 0;
+    if (s.length() == 1) return 1;
+    if (memo.containsKey(s.length())) return memo.get(s.length());
+    int num = ways(s.substring(1), memo);
+    if (Integer.parseInt(s.substring(0, 2)) <= 26) num += ways(s.substring(2), memo);
+    memo.put(s.length(), num);
     return num;
   }
 
   // bottom-up dp
-  private int ways(String s) {
+  public int numDecodings(String s) {
     if (s.length() == 0) return 0;
-    int[] ways = new int[s.length() + 1];
-    ways[0] = 1; // ERROR: length 0 return 1,  must guarantee empty string only results from valid suffix
-    ways[1] = isValid(s.substring(0, 1)) ? 1 : 0;
-    for (int i = 2; i <= s.length(); i++) {
-      if (isValid(s.substring(i - 1, i))) ways[i] += ways[i - 1];
-      if (isValid(s.substring(i - 2, i))) ways[i] += ways[i - 2];
+    int[] ways = new int[s.length()];
+    ways[s.length() - 1] = s.charAt(s.length() - 1) == '0' ? 0 : 1;
+    for (int i = s.length() - 2; i >= 0; i--) {
+      int way = 0;
+      if (s.charAt(i) != '0') { // both one digit and two digits cannot start with '0'
+        way += ways[i + 1];
+        if (1 <= Integer.parseInt(s.substring(i, i + 2)) && 26 >= Integer.parseInt(s.substring(i, i + 2))) {
+          way += (i + 2 == s.length()) ? 1 : ways[i + 2];
+        }
+      }
+      ways[i] = way;
     }
-    return ways[s.length()];
+    return ways[0];
   }
 
-  private boolean isValid(String s) {
-    if (s.length() > 2 || s.length() == 0) return false;
-    else if (s.charAt(0) == '0') return false;
-    else {
-      int val = Integer.parseInt(s);
-      return val >= 1 && val <= 26;
+  // constant space
+  public int numDecodings(String s) {
+    if (s.isEmpty()) return 0;
+    int pre = 1, prepre = 1;
+    for (int i = s.length() - 1; i >= 0; i--) {
+      int way = 0;
+      if (s.charAt(i) >= '1' && s.charAt(i) <= '9') way += pre;
+      if (i + 1 < s.length() && s.charAt(i) != '0' && Integer.parseInt(s.substring(i, i + 2)) <= 26 && Integer.parseInt(s.substring(i, i + 2)) >= 1) way += prepre;
+      prepre = pre;
+      pre = way;
     }
+    return pre;
   }
 }

@@ -14,6 +14,29 @@
  *     Interval(int s, int e) { start = s; end = e; }
  * }
  */
+
+public class Solution {
+  public List<Interval> merge(List<Interval> intervals) {
+    Collections.sort(intervals, (l, r) -> {
+      return l.start - r.start;
+    });
+    if (intervals == null || intervals.size() == 0) return intervals;
+    List<Interval> res = new ArrayList<>();
+    res.add(intervals.get(0));
+    for (int i = 1; i < intervals.size(); i++) {
+      Interval l = res.get(res.size() - 1);
+      Interval r = intervals.get(i);
+      if (l.end >= r.start) {
+        l.end = Math.max(l.end, r.end);
+      } else {
+        res.add(r);
+      }
+    }
+    return res;
+  }
+}
+
+// inplace
 public class Solution {
   public List<Interval> merge(List<Interval> intervals) {
     Collections.sort(intervals, new Comparator<Interval>() {

@@ -13,25 +13,19 @@ public class Solution extends Reader4 {
   /**
    * @param buf Destination buffer
    * @param n   Maximum number of characters to read
-   * @return The number of characters read
+   * @return    The number of characters read
    */
   public int read(char[] buf, int n) {
-    int count = 0;
-    char[] buf4 = new char[4];
-    int size = 0;
-    while ((size = read4(buf4)) == 4) {
-      for (int i = 0; i < 4; i++) {
-        buf[count++] = buf4[i];
-        if (count == n) break;
-      }
-      if (count == n) break; // ERROR: forget add this break
-    }
-    if (count < n) {
-      for (int i = 0; i < size; i++) {
-        buf[count++] = buf4[i];
-        if (count == n) break;
+    char[] cbuf = new char[4];
+    int bytesRead = 0;
+    boolean eof = false;
+    int num;
+    while (bytesRead < n && !eof) {
+      if ((num = read4(cbuf)) < 4) eof = true;
+      for (int i = 0; i < num && bytesRead < n; i++) {
+        buf[bytesRead++] = cbuf[i];
       }
     }
-    return count;
+    return bytesRead;
   }
 }

@@ -16,32 +16,41 @@
  * }
  */
 
-public class BSTIterator {
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
 
-  Stack<TreeNode> smallnodes = new Stack<TreeNode>();
+public class BSTIterator {
+  Deque<TreeNode> st = new ArrayDeque<>();
 
   public BSTIterator(TreeNode root) {
-    while (root != null) {
-      smallnodes.push(root);
+    while(root != null) {
+      st.push(root);
       root = root.left;
     }
   }
 
   /** @return whether we have a next smallest number */
   public boolean hasNext() {
-    return !smallnodes.isEmpty();
+    return !st.isEmpty();
   }
 
   /** @return the next smallest number */
   public int next() {
-    TreeNode curr = smallnodes.pop();
-    int ret = curr.val;
-    curr = curr.right;
-    while (curr != null) {
-      smallnodes.push(curr);
-      curr = curr.left;
+    TreeNode top = st.pop();
+    int next = top.val;
+    top = top.right;
+    while(top != null) {
+      st.push(top);
+      top = top.left;
     }
-    return ret;
+    return next;
   }
 }
 

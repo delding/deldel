@@ -10,23 +10,19 @@
 
 public class Solution {
   public int removeDuplicates(int[] nums) {
-    if (nums.length == 0) return 0;
-    int dup = 1;
     int head = 0;
-    int curr = 1;
-    while (curr < nums.length) {
-      if (nums[curr] != nums[head]) {
-        dup = 1;
-        nums[++head] = nums[curr++];
+    boolean occured = false;
+    for (int i = 0; i < nums.length; i++) {
+      if (i == 0 || nums[i] != nums[i - 1]) {
+        nums[head++] = nums[i];
+        occured = false;
       } else {
-        if (dup == 1) {
-          nums[++head] = nums[curr++];
-          dup++;
-        } else {
-          curr++;
+        if (!occured) {
+          occured = true;
+          nums[head++] = nums[i];
         }
       }
     }
-    return head + 1;
+    return head;
   }
 }

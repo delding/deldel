@@ -11,35 +11,11 @@
 
 
 public class Solution {
-
-  // O(n)
   public int removeDuplicates(int[] nums) {
-    if (nums.length == 0) return 0;
     int head = 0;
-    int curr = 1;
-    while (curr < nums.length) {
-      if (nums[curr] != nums[head]) nums[++head] = nums[curr++];
-      else curr++;
+    for (int i = 0; i < nums.length; i++) {
+      if (i == 0 || nums[i] != nums[i - 1]) nums[head++] = nums[i];
     }
-    return head + 1;
-  }
-
-
-  // O(n^2) no good
-  public int removeDuplicatesSlow(int[] nums) {
-    int end = nums.length - 1;
-    for (int i = 0; i < end; ) {
-      if (nums[i] == nums[i + 1]) { // ERROR: don't increase i
-        for (int j = i + 1; j < end; j++) swap(nums, j, j + 1);
-        end--;
-      } else i++;
-    }
-    return end + 1;
-  }
-
-  private void swap(int nums[], int i, int j) {
-    int tmp = nums[i];
-    nums[i] = nums[j];
-    nums[j] = tmp;
+    return head;
   }
 }

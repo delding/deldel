@@ -18,16 +18,10 @@
 
 public class Solution {
   public boolean canAttendMeetings(Interval[] intervals) {
-    Arrays.sort(intervals, new Comparator<Interval>() {
-      public int compare(Interval int1, Interval int2) {
-        return int1.start - int2.start;
-      }
-    });
-
+    Arrays.sort(intervals, (i1, i2) -> i1.start - i2.start);
     for (int i = 0; i < intervals.length - 1; i++) {
       if (intervals[i].end > intervals[i + 1].start) return false;
     }
     return true;
-
   }
 }

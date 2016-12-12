@@ -23,51 +23,47 @@ import java.util.ArrayList;
 
 public class Solution {
   public List<String> fullJustify(String[] words, int maxWidth) {
-    List<String> ret = new ArrayList<>();
-    List<String> line = new ArrayList<>();
-    int charNum = 0;
-    int wid = 0;
-    for (int i = 0; i < words.length; ) {
-      if (wid + words[i].length() <= maxWidth) {
-        line.add(words[i]);
-        charNum += words[i].length();
-        wid += words[i].length() + 1;
-        if (wid == maxWidth + 1) {
-          String tmp = "";
-          for (String w : line) {
-            tmp += w + " ";
-          }
-          ret.add(tmp.substring(0, maxWidth));
-          wid = 0;
-          charNum = 0;
-          line.clear();
-        } else if (i == words.length - 1) {
-          String tmp = "";
-          for (String w : line) {
-            tmp += w + " ";
-          }
-          while (tmp.length() < maxWidth) tmp += " ";
-          ret.add(tmp);
+    List<String> text = new ArrayList<>();
+    String row = "";
+    for (int i = 0; i <= words.length; i++) {
+      if (i == words.length) { // i == words.length to handle last line
+        if (!row.isEmpty()) {
+          while (row.length() < maxWidth) row = row + " ";
+          text.add(row);
         }
-        i++;
+      } else if (row.length() + words[i].length() == maxWidth) {
+        text.add(row + words[i]);
+        row = "";
+      } else if (row.length() + words[i].length() < maxWidth) {
+        row = row + words[i] + " ";
       } else {
-        int average = line.size() == 1 ? 0 : (maxWidth - charNum) / (line.size() - 1); // bug if a line contains only one word
-        int extra = maxWidth - charNum - average * (line.size() - 1);
-        String tmp = "";
-        String white = "";
-        while (average-- > 0) white += " ";
-        for (String w : line) {
-          tmp += w + white;
-          if (extra-- > 0) tmp += " ";
+        String[] wds = row.trim().split(" ");
+        int wdsLen = row.length() - wds.length;
+        int spcLen = maxWidth - wdsLen;
+        row = "";
+        if (wds.length == 1) {
+          row = wds[0];
+          for (int j = 0; j < spcLen; j++) row = row + " ";
+          text.add(row);
+        } else {
+          int avgSpc = spcLen / (wds.length - 1);
+          int addSpc = spcLen % (wds.length - 1);
+          String spc = "";
+          while (avgSpc-- > 0) spc = spc + " ";
+          for (int j = 0; j < wds.length; j++) {
+            row = row + wds[j];
+            if (j < wds.length - 1) row = row + spc; // no space after last word
+            if (addSpc > 0) {
+              row = row + " ";
+              addSpc--;
+            }
+          }
+          text.add(row);
         }
-        while (tmp.length() < maxWidth)
-          tmp += " "; // bug if a line contains only one word, padding white space at end
-        ret.add(tmp.substring(0, maxWidth));
-        wid = 0;
-        charNum = 0;
-        line.clear();
+        row = ""; // reset to empty
+        i--; // not move to next word
       }
     }
-    return ret;
+    return text;
   }
 }

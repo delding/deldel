@@ -21,25 +21,22 @@
 
 public class Solution {
   public List<List<Integer>> combinationSum3(int k, int n) {
-    List<List<Integer>> rst = new ArrayList<List<Integer>>();
-    List<Integer> numbers = new ArrayList<Integer>();
-    dfs(k, n, 1, rst, numbers);
-    return rst;
+    List<List<Integer>> combs = new ArrayList<>();
+    dfs(n, combs, new ArrayList<Integer>(), 1, k);
+    return combs;
   }
 
-  private void dfs(int k, int n, int start, List<List<Integer>> rst, List<Integer> numbers) {
-    if (k == 0) {
-      if (n == 0) {
-        rst.add(new ArrayList<Integer>(numbers));
+  void dfs(int target, List<List<Integer>> combs, List<Integer> comb, int num, int k) {
+    if (comb.size() == k) {
+      if (target == 0) combs.add(new ArrayList<>(comb));
+    } else {
+      for (int i = num; i < 10; i++) {
+        if (i <= target) {
+          comb.add(i);
+          dfs(target - i, combs, comb, i + 1, k);
+          comb.remove(comb.size() - 1);
+        }
       }
-      return;
-    }
-    for (int i = start; i <= 9; i++) {
-      numbers.add(i);
-      dfs(k - 1, n - i, i + 1, rst, numbers);
-      numbers.remove(numbers.size() - 1);
     }
   }
 }
-
-

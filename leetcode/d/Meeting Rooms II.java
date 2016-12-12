@@ -19,6 +19,22 @@
 
 public class Solution {
   public int minMeetingRooms(Interval[] intervals) {
+    Arrays.sort(intervals, (i1, i2) -> i1.start - i2.start);
+    Queue<Interval> minHeap = new PriorityQueue<>((i1, i2) -> i1.end - i2.end);
+    int maxOverlap = 0;
+    for (Interval intv : intervals) {
+      while (!minHeap.isEmpty() && minHeap.peek().end <= intv.start) {
+        minHeap.poll();
+      }
+      minHeap.offer(intv);
+      maxOverlap = Math.max(maxOverlap, minHeap.size());
+    }
+    return maxOverlap;
+  }
+}
+
+public class Solution2 {
+  public int minMeetingRooms(Interval[] intervals) {
     PriorityQueue<Time> pq = new PriorityQueue<Time>();
     for (Interval i : intervals) {
       pq.add(new Time(i.start, true));

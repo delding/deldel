@@ -21,35 +21,37 @@
 
 public class Solution {
   public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> ret = new ArrayList<>();
+    if (nums.length == 0) return ret;
     Arrays.sort(nums);
-    List<List<Integer>> subsets = new ArrayList<List<Integer>>();
-    dfs(nums, subsets, new ArrayList<Integer>(), 0);
-    return subsets;
+    solve2(nums, ret, new ArrayList<Integer>(), 0);
+    return ret;
   }
 
-  private void dfs(int[] nums, List<List<Integer>> subsets, List<Integer> subset, int idx) {
+  // this search tree each node has two children
+  void solve(int[] nums, List<List<Integer>> ret, List<Integer> set, int i) {
+    if (i == nums.length) {
+      ret.add(new ArrayList<Integer>(set));
+      return;
+    }
+    solve(nums, ret, set, i+1);
+    set.add(nums[i]);
+    solve(nums, ret, set, i + 1);
+    set.remove(set.size() - 1);
+  }
+
+  // this search tree each node has many children (from i = idx to i = nums.length)
+  void solve2(int[] nums, List<List<Integer>> subsets, List<Integer> subset, int idx) {
     if (idx == nums.length) subsets.add(new ArrayList<Integer>(subset));
     else {
       for (int i = idx; i <= nums.length; i++) {
-        if (i == nums.length) dfs(nums, subsets, subset, nums.length);
+        if (i == nums.length) solve2(nums, subsets, subset, i); // i==nums.length corresponds to select no number
         else {
           subset.add(nums[i]);
-          dfs(nums, subsets, subset, i + 1);
+          solve2(nums, subsets, subset, i + 1);
           subset.remove(subset.size() - 1);
         }
       }
     }
-  }
-
-  // solution 2
-  private void dfs2(int[] nums, int idx, List<List<Integer>> res, List<Integer> list) {
-    if (idx == nums.length) {
-      res.add(new ArrayList(list));
-      return;
-    }
-    dfs2(nums, idx + 1, res, list); // not add
-    list.add(nums[idx]);
-    dfs2(nums, idx + 1, res, list); // add
-    list.remove(list.size() - 1);
   }
 }

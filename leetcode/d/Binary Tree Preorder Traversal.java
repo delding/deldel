@@ -21,18 +21,17 @@
  */
 public class Solution {
   public List<Integer> preorderTraversal(TreeNode root) {
-    List<Integer> ret = new ArrayList<Integer>();
-    if (root == null) return ret;
-    Stack<TreeNode> st = new Stack<TreeNode>();
-    TreeNode curr = root;
-    while (curr != null || !st.isEmpty()) {
-      if (curr == null) {
-        curr = st.pop();
+    List<Integer> preorder = new ArrayList<>();
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    while (root != null || !stack.isEmpty()) {
+      if (root != null) {
+        preorder.add(root.val);
+        if (root.right != null) stack.push(root.right);
+        root = root.left;
+      } else {
+        root = stack.pop();
       }
-      ret.add(curr.val);
-      if (curr.right != null) st.push(curr.right);
-      curr = curr.left;
     }
-    return ret;
+    return preorder;
   }
 }

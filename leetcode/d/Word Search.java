@@ -16,30 +16,34 @@
 
 public class Solution {
   public boolean exist(char[][] board, String word) {
-    if (board.length == 0 || board[0].length == 0) return false;
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board[0].length; j++) {
-        if (exist(board, word, i, j)) return true;
+    if (word.isEmpty()) return true;
+    int m = board.length;
+    if (m == 0 || board[0].length == 0) return false;
+    int n = board[0].length;
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        if (search(board, i, j, word)) return true;
       }
     }
     return false;
   }
 
-  private boolean exist(char[][] board, String word, int i, int j) {
-    if (word.length() == 1) { // ERROR: don't use length == 0 to return true, it can be last char match but no where to go on the board and thus no further call for empty string
-      return board[i][j] == word.charAt(0);
-    }
+  static int[][] dirs = new int[][] {{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+
+  boolean search(char[][] board, int i, int j, String word) {
     if (board[i][j] != word.charAt(0)) return false;
-    board[i][j] = '*';
-    int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
-    for (int[] dir : dirs) {
-      int x = i + dir[0];
-      int y = j + dir[1];
-      if (x >= 0 && x < board.length && y >= 0 && y < board[0].length) {
-        if (exist(board, word.substring(1), x, y)) return true;
+    else if (word.length() == 1) return true;
+    else {
+      board[i][j] = '\0'; // mark visited
+      for (int[] dir : dirs) {
+        int x = i + dir[0];
+        int y = j + dir[1];
+        if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && board[x][y] != '\0') {
+          if (search(board, x, y, word.substring(1))) return true;
+        }
       }
+      board[i][j] = word.charAt(0);
     }
-    board[i][j] = word.charAt(0);
     return false;
   }
 }

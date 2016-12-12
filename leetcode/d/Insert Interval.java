@@ -18,28 +18,68 @@
  * }
  */
 
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
 public class Solution {
-  public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-    int len = intervals.size();
-    for (int i = 0; i <= len; ) {
-      if (i == len) { // bug: must consider the case newInterval being added to the last
-        intervals.add(newInterval);
-        break;
-      }
-      if (intervals.get(i).end < newInterval.start) { // no overlap
-        i++;
-        continue;
-      }
-      if (intervals.get(i).start > newInterval.end) { // no overlap
+  public List<Interval> insert1(List<Interval> intervals, Interval newInterval) {
+    for (int i = 0; i < intervals.size(); i++) {
+      if (newInterval.start <= intervals.get(i).start) {
         intervals.add(i, newInterval);
         break;
-      } else {
+      }
+    }
+    if (intervals.isEmpty() || newInterval.start > intervals.get(intervals.size() - 1).start) intervals.add(newInterval);
+    List<Interval> res = new ArrayList<>();
+    for (Interval inte : intervals) {
+      if (res.isEmpty()) res.add(inte);
+      else {
+        Interval l = res.get(res.size() - 1);
+        if (overlap(l, inte)) {
+          l.end = Math.max(l.end, inte.end);
+        } else {
+          res.add(inte);
+        }
+      }
+    }
+    return res;
+  }
+
+  boolean overlap(Interval int1, Interval int2) {
+    return int1.start <= int2.end && int2.start <= int1.end;
+  }
+
+  // in-place
+  public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+    for (int i = 0; i < intervals.size(); ) {
+      if (overlap(intervals.get(i), newInterval)) {
         newInterval.start = Math.min(newInterval.start, intervals.get(i).start);
         newInterval.end = Math.max(newInterval.end, intervals.get(i).end);
         intervals.remove(i);
-        len--;
+      } else if (intervals.get(i).start > newInterval.start) {
+        intervals.add(i, newInterval);
+        newInterval = null; // indicate insertion is done
+        break;
+      } else {
+        i++;
       }
     }
+    if (newInterval != null) intervals.add(newInterval);
     return intervals;
   }
 }

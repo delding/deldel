@@ -10,6 +10,23 @@
  **/
 
 public class Solution {
+  // Then if the count is more than mid, the search space will be [low mid] otherwise [mid+1 high]. I do this until search space is only one number which is the duplicate number
+  public int findDuplicate(int[] nums) {
+    if (nums.length == 0 || nums == null)
+      return 0;
+    int low = 1, high = nums.length - 1, mid;
+    while (low < high) {
+      mid = low + (high - low) / 2; // mid is the number of digit <= mid if no duplicate
+      int count = 0;
+      for (int i = 0; i < nums.length; i++) {
+        if (nums[i] <= mid) count++;
+      }
+      if (count > mid) high = mid; // duplicate appears in [low, mid] inclusive
+      else low = mid + 1; // count == mid, duplicate appears in [mid + 1:]
+    }
+    return high;
+  }
+
   public int findDuplicate(int[] nums) {
     // array nums[] is defined by a function f(i) = nums[i], domain and range are both [1, n]
     // since index 0 is not in [1, n], start position should be i = nums[0], no need to consider

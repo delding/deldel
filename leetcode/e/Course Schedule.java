@@ -21,45 +21,62 @@
  * Topological sort could also be done via BFS.
  */
 
+// needs to be a DAG, i.e. no cycle
 public class Solution {
+  // bfs, topo-sort by indegrees
   public boolean canFinish(int numCourses, int[][] prerequisites) {
-    if (numCourses == 0) return true;
-    boolean[] indegrees = new boolean[numCourses];
+    int[] indegrees = new int[numCourses];
+    Map<Integer, Set<Integer>> adj = new HashMap<>();
+    for (int i = 0; i < numCourses; i++) adj.put(i, new HashSet<>());
     for (int[] edge : prerequisites) {
-      indegrees[edge[1]] = true;
-    }
-    boolean[] visited = new boolean[numCourses];
-    boolean[] backedgeNodes = new boolean[numCourses];
-    int countIndegree = 0;
-    for (boolean in : indegrees) {
-      if (in) countIndegree++;
-    }
-    if (countIndegree == numCourses) return false;
-    for (int i = 0; i < numCourses; i++) {
-      if (!indegrees[i]) {
-        if (hasCycle(i, prerequisites, visited, backedgeNodes)) return false;
+      // in case of multiple inputs of same edge, indegree of sink vertex will be added for than once
+      if (!adj.get(edge[1]).contains(edge[0])) {
+        indegrees[edge[0]]++;
+        adj.get(edge[1]).add(edge[0]);
       }
     }
-    int visitCount = 0;
-    for (boolean v : visited) {
-      if (v) visitCount++;
+    Queue<Integer> q = new ArrayDeque<>();
+    for (int i = 0; i < numCourses; i++) {
+      if (indegrees[i] == 0) q.add(i);
     }
-    return visitCount == numCourses;
+    while (!q.isEmpty()) {
+      int course = q.poll();
+      for (int c : adj.get(course)) {
+        if (--indegrees[c] == 0) q.add(c);
+      }
+    }
+    for (int d : indegrees) {
+      if (d > 0) return false;
+    }
+    return true;
   }
 
-  boolean hasCycle(int node, int[][] edges, boolean[] visited, boolean[] backedgeNodes) {
-    visited[node] = true;
-    backedgeNodes[node] = true;
-    for (int[] edge : edges) {
-      if (edge[0] == node) {
-        if (!visited[edge[1]]) {
-          if (hasCycle(edge[1], edges, visited, backedgeNodes))
-            return true;
-        } else if (backedgeNodes[edge[1]]) return true;
-
+  // dfs
+  public boolean canFinishDFS(int numCourses, int[][] prerequisites) {
+    Map<Integer, Set<Integer>> adj = new HashMap<>();
+    for (int i = 0; i < numCourses; i++) adj.put(i, new HashSet<Integer>());
+    for (int[] edge : prerequisites) {
+      adj.get(edge[1]).add(edge[0]);
+    }
+    boolean[] visited = new boolean[numCourses];
+    for (int v = 0; v < numCourses; v++) {
+      if (!visited[v]) {
+        if (isCyclic(v, visited, new boolean[numCourses], adj)) return false;
       }
     }
-    backedgeNodes[node] = false;
+    return true;
+  }
+
+  boolean isCyclic(int v, boolean[] visited, boolean[] visiting, Map<Integer, Set<Integer>> adj) {
+    visiting[v] = true;
+    for (int course : adj.get(v)) {
+      if (visiting[course]) return true;
+      if (!visited[course]) {
+        if (isCyclic(course, visited, visiting, adj)) return true;
+      }
+    }
+    visiting[v] = false;
+    visited[v] = true;
     return false;
   }
 }

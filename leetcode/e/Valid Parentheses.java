@@ -21,6 +21,6 @@ public class Solution {
         }
       }
     }
-    return st.isEmpty(); // bug : must check if stack is empty
+    return st.isEmpty();
   }
 }

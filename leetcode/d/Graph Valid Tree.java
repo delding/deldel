@@ -8,38 +8,35 @@
  * is the same as [1, 0] and thus will not appear together in edges.
  */
 
-// need to be connected and has no cycle
 public class Solution {
-  // union-find O(Elog(V))
-
-  // dfs: O(V+E)
+  // connected and acyclic
   public boolean validTree(int n, int[][] edges) {
-    if (edges.length == 0) return n == 1; // if no edge then need to only have one veterx
-    if (edges.length != n - 1)
-      return false; // optimaztion: |E| = |V| - 1 must hold for undirecited graph to be a tree
-    boolean[] visited = new boolean[n];
-    ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
-    for (int i = 0; i < n; i++) adj.add(new ArrayList<Integer>());
-    for (int i = 0; i < edges.length; i++) {
-      adj.get(edges[i][0]).add(edges[i][1]);
-      adj.get(edges[i][1]).add(edges[i][0]);
+    if (edges.length != n - 1) return false; // optimize: |E| = |V| - 1 must hold for undirecited graph to be a tree
+    Map<Integer, Set<Integer>> adj = new HashMap<>();
+    for (int i = 0; i < n; i++) adj.put(i, new HashSet<>());
+    for (int[] e : edges) {
+      adj.get(e[0]).add(e[1]);
+      adj.get(e[1]).add(e[0]);
     }
-    if (hasCycle(0, -1, adj, visited)) return false; // has cycle
-    for (boolean b : visited) if (!b) return false; // not all connected
+    int[] visit = new int[n]; // unvisited 0, visiting 1, visited 2
+    if (cyclic(adj, visit, 0, -1)) return false;
+    for (int v : visit) if (v != 2) return false;
     return true;
   }
 
-  private boolean hasCycle(int node, int parent, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
-    visited[node] = true;
-    for (int child : adj.get(node)) {
-      if (child != parent) { // undirected graph child-parent, parent-child are two-way paths, so don't goto parent after just go from parent
-        if (visited[child]) return true;
-        else {
-          if (hasCycle(child, node, adj, visited)) return true;
-        }
+  boolean cyclic(Map<Integer, Set<Integer>> adj, int[] visit, int vert, int parent) {
+    visit[vert] = 1;
+    for (int nei : adj.get(vert)) {
+      if (nei == parent) continue; // because undirected graph
+      if (visit[nei] == 1) return true;
+      else if (visit[nei] == 0) {
+        if (cyclic(adj, visit, nei, vert)) return true;
       }
     }
+    visit[vert] = 2;
     return false;
   }
+
+  // union-find O(Elog(V)), for each distinct edge do union, cyclic if two vertices already in same set, all vertices must in one set at alst
 }
 

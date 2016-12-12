@@ -13,34 +13,38 @@
  */
 public class Solution {
   public int maxPoints(Point[] points) {
-    if (points.length == 0) return 0;
-    int globalmax = 0;
-    for (int i = 0; i < points.length - 1; i++) { // total n choose 2 different point pair
-      int localmax = 0;
-      Point p1 = points[i];
-      Map<Double, Integer> slopes = new HashMap();
-      int infSlope = 0;
-      int same = 0; // number of points that are same as p1, so they will on every lines containing p1
+    int max = 0;
+    for (int i = 0; i < points.length; i++) {
+      Map<Integer, Map<Integer, Integer>> slopes = new HashMap<>();
+      int origin = 1;
+      int horizon = 0;
+      int vertical = 0;
+      int other = 0;
       for (int j = i + 1; j < points.length; j++) {
-        Point p2 = points[j];
-        if (p1.x == p2.x && p1.y == p2.y) same++;
-        else if (p1.x == p2.x) infSlope++;
+        int x = points[j].x - points[i].x;
+        int y = points[j].y - points[i].y;
+        if (x == 0 && y == 0) origin++;
+        else if (x == 0) vertical++;
+        else if (y == 0) horizon++;
         else {
-          double slope = 0.0;
-          if (p1.y != p2.y) {// java define -0.0 so need to regard 0.0 and -0.0 as same
-            slope = (double) (p1.y - p2.y) / (double) (p1.x - p2.x);
-          }
-          Integer count = slopes.get(slope);
-          if (count == null) slopes.put(slope, 1);
-          else slopes.put(slope, ++count);
-          if (count == null) localmax = Math.max(localmax, 1);
-          else localmax = Math.max(localmax, count);
+          int g = gcd(x, y);
+          x /= g;
+          y /= g;
+          int count = 1;
+          if (slopes.containsKey(x)) {
+            count += slopes.get(x).getOrDefault(y, 0);
+          } else slopes.put(x, new HashMap<>());
+          slopes.get(x).put(y, count);
+          other = Math.max(other, count);
         }
       }
-      localmax = Math.max(localmax, infSlope);
-      localmax += same;
-      globalmax = Math.max(localmax, globalmax);
+      max = Math.max(Math.max(Math.max(horizon, vertical), other) + origin, max);
     }
-    return globalmax + 1; // EORROR: need to add the point itself
+    return max;
+  }
+
+  int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
   }
 }

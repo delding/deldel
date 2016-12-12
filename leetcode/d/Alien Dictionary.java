@@ -23,71 +23,50 @@
 
 public class Solution {
   public String alienOrder(String[] words) {
-    Map<Character, HashSet<Character>> adj = new HashMap<Character, HashSet<Character>>();
-    HashMap<Character, Boolean> visited = new HashMap();
-    HashMap<Character, Boolean> visiting = new HashMap();
-    // Error: don't put non existent node in the adjacent list, which makes the node become an zero edge isolated node
-    for (String w : words) {
+    Map<Character, Set<Character>> g = new HashMap<>();
+    for (String w : words) {  // because some vertex can have no edges and will not be added to the graph
       for (char c : w.toCharArray()) {
-        if (!adj.containsKey(c)) {
-          adj.put(c, new HashSet<Character>());
-          visited.put(c, false);
-          visiting.put(c, false);
-        }
+        if (!g.containsKey(c)) g.put(c, new HashSet<>());
       }
     }
-
-    // ERROR: must be an O(n^2) operation, compare word with all the words after it, each comparison add an edge
-    for (int i = 0; i < words.length - 1; i++) {
+    for (int i = 0; i < words.length; i++) {
+      String w1 = words[i];
       for (int j = i + 1; j < words.length; j++) {
-        addEdge(words[i], words[j], adj);
-      }
-    }
-
-    String rst = topoSort(adj, visited, visiting);
-    return rst;
-  }
-
-  private void addEdge(String w1, String w2, Map<Character, HashSet<Character>> adj) {
-    int len = Math.min(w1.length(), w2.length());
-    for (int i = 0; i < len; i++) {
-      char c1 = w1.charAt(i);
-      char c2 = w2.charAt(i);
-      if (c1 != c2) {
-        adj.get(c1).add(c2);
-        return; // Error: must only add the first different char pair as an edge
-      }
-    }
-  }
-
-  private String topoSort(Map<Character, HashSet<Character>> adj, HashMap<Character, Boolean> visited, HashMap<Character, Boolean> visiting) {
-    StringBuilder postorder = new StringBuilder();
-
-    for (char c : adj.keySet()) { // ERROR: only go through key in the hashmap, don't iterate through chars not occured in the input
-      if (!visited.get(c)) {
-        if (hasCycle(adj, c, visited, visiting, postorder))
-          return ""; // if has cycle return empty string
-      }
-    }
-    return postorder.reverse().toString();
-  }
-
-  // dfs while check cycle
-  private boolean hasCycle(Map<Character, HashSet<Character>> adj, char c, HashMap<Character, Boolean> visited, HashMap<Character, Boolean> visiting, StringBuilder postorder) {
-    visiting.put(c, true);
-    for (char child : adj.get(c)) {
-      if (!visited.get(child)) {
-        if (visiting.get(child)) return true;
-        else {
-          if (hasCycle(adj, child, visited, visiting, postorder)) return true;
+        String w2 = words[j];
+        int m = 0;
+        for (; m < Math.min(w1.length(), w2.length()); m++) {
+          if (w1.charAt(m) != w2.charAt(m)) {
+            g.get(w1.charAt(m)).add(w2.charAt(m));
+            break; // need to break
+          }
         }
+        // following this is only to pass the test case ["wrtkj","wrt"]
+        if (m == w2.length() && w1.length() > w2.length()) return "";
       }
     }
-    postorder.append(c);
-    visiting.put(c, false);
-
-    visited.put(c, true);
-    return false;
+    boolean[] visited = new boolean[26];
+    Deque<Character> stack = new ArrayDeque<>();
+    for (char c : g.keySet()) {
+      if (!visited[c - 'a']) {
+        if (!topoSort(c, g, stack, new boolean[26], visited)) return "";
+      }
+    }
+    String ret = "";
+    while (!stack.isEmpty()) ret = ret + stack.pop();
+    return ret;
   }
 
+  boolean topoSort(char cur, Map<Character, Set<Character>> g, Deque<Character> postorder, boolean[] visiting, boolean[] visited) {
+    visiting[cur - 'a'] = true;
+    for (char nei : g.get(cur)) {
+      if (visiting[nei - 'a']) return false; // cycle
+      if (!visited[nei - 'a']) {
+        if (!topoSort(nei, g, postorder, visiting, visited)) return false;
+      }
+    }
+    postorder.push(cur);
+    visiting[cur - 'a'] = false;
+    visited[cur - 'a'] = true;
+    return true;
+  }
 }

@@ -12,7 +12,7 @@ public class Solution {
       for (int i = 0; i < s.length() - len + 1; i++) {
         int j = len - 1 + i;
         if (len == 1) lengths[i][j] = true;
-        else if (len == 2) lengths[i][j] = s.charAt(i) == s.charAt(j) ? true : false;
+        else if (len == 2) lengths[i][j] = s.charAt(i) == s.charAt(j);
         else {
           lengths[i][j] = lengths[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
         }

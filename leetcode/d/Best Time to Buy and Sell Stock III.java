@@ -5,6 +5,30 @@
 
 public class Solution {
   public int maxProfit(int[] prices) {
+    int n = prices.length;
+    if (n == 0) return 0;
+    int[] prefixProf = new int[n];
+    int buy = prices[0];
+    for (int i = 1; i < n; i++) {
+      prefixProf[i] = Math.max(prefixProf[i - 1], prices[i] - buy);
+      buy = Math.min(buy, prices[i]);
+    }
+    int[] suffixProf = new int[n];
+    int sell = prices[n - 1];
+    for (int i = n - 2; i >= 0; i--) {
+      suffixProf[i] = Math.max(suffixProf[i + 1], sell - prices[i]);
+      sell = Math.max(sell, prices[i]);
+    }
+    int p = 0;
+    for (int i = 0; i < n; i++) {
+      p = Math.max(prefixProf[i] + suffixProf[i], p);
+    }
+    return p;
+  }
+}
+
+public class Solution {
+  public int maxProfit(int[] prices) {
     if (prices.length == 0) return 0;
     int len = prices.length;
     int[] premin = new int[len];

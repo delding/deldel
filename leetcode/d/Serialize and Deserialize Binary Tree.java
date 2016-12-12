@@ -24,41 +24,86 @@
  * }
  */
 public class Codec {
-
-  // Encodes a tree to a single string.
+  // iterative, level order
   public String serialize(TreeNode root) {
+    if (root == null) return "\0";
+    Queue<TreeNode> q = new ArrayDeque<>();
     StringBuilder sb = new StringBuilder();
-    serialize(root, sb);
+    q.add(root);
+    sb.append(root.val + ",");
+    while (!q.isEmpty()) {
+      TreeNode n = q.poll();
+      if (n.left == null) {
+        sb.append("\0,");
+      } else {
+        sb.append(n.left.val + ",");
+        q.add(n.left);
+      }
+      if (n.right == null) {
+        sb.append("\0,");
+      } else {
+        sb.append(n.right.val + ",");
+        q.add(n.right);
+      }
+    }
     return sb.toString().substring(0, sb.length() - 1);
   }
 
-  private void serialize(TreeNode root, StringBuilder sb) {
-    if (root == null) {
-      sb.append("#,");
-      return;
+  public TreeNode deserialize(String data) {
+    if (data.equals("\0")) return null;
+    Queue<TreeNode> q = new ArrayDeque<>();
+    Iterator<String> it = Arrays.asList(data.split(",")).iterator();
+    TreeNode root = new TreeNode(Integer.parseInt(it.next()));
+    q.add(root);
+    while (!q.isEmpty()) {
+      TreeNode n = q.poll();
+      String left = it.next();
+      String right = it.next();
+      if (!left.equals("\0")) {
+        TreeNode l = new TreeNode(Integer.parseInt(left));
+        n.left = l;
+        q.add(l);
+      }
+      if (!right.equals("\0")) {
+        TreeNode r = new TreeNode(Integer.parseInt(right));
+        n.right = r;
+        q.add(r);
+      }
     }
-    sb.append(root.val + ",");
-    serialize(root.left, sb);
-    serialize(root.right, sb);
+    return root;
+  }
+
+  // recursive
+  // Encodes a tree to a single string.
+  public String serialize1(TreeNode root) {
+    StringBuilder sb = new StringBuilder();
+    preorder(root, sb);
+    return sb.toString().substring(0, sb.length() - 1);
+  }
+  // pre-order traversal
+  void preorder(TreeNode n, StringBuilder sb) {
+    if (n == null) sb.append("\0,");
+    else {
+      sb.append(n.val + ",");
+      preorder(n.left, sb);
+      preorder(n.right, sb);
+    }
   }
 
   // Decodes your encoded data to tree.
-  public TreeNode deserialize(String data) {
-    String[] s = data.split(",");
-    int[] idx = {0};
-    return deserialize(s, idx);
+  public TreeNode deserialize1(String data) {
+    return preorder(Arrays.asList(data.split(",")).iterator());
   }
 
-  private TreeNode deserialize(String[] data, int[] idx) {
-    if (data[idx[0]].equals("#")) { // bug: equals, not ==
-      return null;
+  TreeNode preorder(Iterator<String> it) {
+    String val = it.next();
+    if (val.equals("\0")) return null;
+    else {
+      TreeNode curr = new TreeNode(Integer.parseInt(val));
+      curr.left = preorder(it);
+      curr.right = preorder(it);
+      return curr;
     }
-    TreeNode root = new TreeNode(Integer.parseInt(data[idx[0]]));
-    idx[0]++;
-    root.left = deserialize(data, idx);
-    idx[0]++;
-    root.right = deserialize(data, idx);
-    return root;
   }
 }
 

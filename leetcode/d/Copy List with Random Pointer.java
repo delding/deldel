@@ -13,30 +13,28 @@
  */
 public class Solution {
   public RandomListNode copyRandomList(RandomListNode head) {
-    Map<RandomListNode, RandomListNode> copied = new HashMap();
-    RandomListNode dummy = new RandomListNode(0);
-    dummy.next = head;
-    RandomListNode dummyClone = new RandomListNode(0); // also use a dummy for clone, clone dummy.next and its random pointer, then update dummy.next
-    RandomListNode ret = dummyClone;
-    while (dummy.next != null) {
-      RandomListNode next = dummy.next;
-      RandomListNode clone = copied.get(next);
-      if (clone == null) {
-        clone = new RandomListNode(next.label);
-        copied.put(next, clone);
+    RandomListNode dum = new RandomListNode(0);
+    RandomListNode pre = new RandomListNode(0);
+    dum.next = head;
+    Map<RandomListNode, RandomListNode> copied = new HashMap<>();
+    while (dum.next != null) { // each iteraton clone next node: its label and its random
+      dum = dum.next;
+      RandomListNode n = copied.get(dum);
+      if (n == null) {
+        n = new RandomListNode(dum.label);
+        copied.put(dum, n);
       }
-      dummyClone.next = clone; // clone next pointer
-      if (next.random != null) { // ERROR: must check only if random pointer is not null, clone random pointer
-        RandomListNode random = copied.get(next.random);
-        if (random == null) {
-          random = new RandomListNode(next.random.label);
-          copied.put(next.random, random);
+      pre.next = n;
+      pre = pre.next;
+      if (dum.random != null) {
+        RandomListNode r = copied.get(dum.random);
+        if (r == null) {
+          r = new RandomListNode(dum.random.label);
+          copied.put(dum.random, r);
         }
-        clone.random = random; // clone random pointer
+        pre.random = r;
       }
-      dummy = dummy.next;
-      dummyClone = dummyClone.next;
     }
-    return ret.next;
+    return copied.get(head);
   }
 }

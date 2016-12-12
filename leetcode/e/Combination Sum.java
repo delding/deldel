@@ -16,20 +16,20 @@
 public class Solution {
   public List<List<Integer>> combinationSum(int[] candidates, int target) {
     Arrays.sort(candidates);
-    List<List<Integer>> ret = new ArrayList<>();
-    dfs(candidates, target, 0, new ArrayList<Integer>(), ret);
-    return ret;
+    List<List<Integer>> combs = new ArrayList<>();
+    dfs(candidates, target, combs, new ArrayList<Integer>(), 0);
+    return combs;
   }
 
-  void dfs(int[] cand, int target, int idx, List<Integer> cur, List<List<Integer>> ret) {
-    if (target == 0) ret.add(new ArrayList<>(cur));
+  void dfs(int[] cand, int target, List<List<Integer>> combs, List<Integer> comb, int idx) {
+    if (target == 0) combs.add(new ArrayList<>(comb));
     else {
       for (int i = idx; i < cand.length; i++) {
-        if (target - cand[i] < 0)
-          break; // bug: must prune here, otherwise infinite recursion since allow duplication
-        cur.add(cand[i]);
-        dfs(cand, target - cand[i], i, cur, ret); // pass i instead of i + 1 to allow duplicates
-        cur.remove(cur.size() - 1);
+        if (cand[i] <= target) {
+          comb.add(cand[i]);
+          dfs(cand, target - cand[i], combs, comb, i);
+          comb.remove(comb.size() - 1);
+        }
       }
     }
   }

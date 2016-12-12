@@ -10,6 +10,22 @@
 
 public class Solution {
 
+  // bottom up
+  public boolean wordBreak(String s, Set<String> wordDict) {
+    boolean[] canReach = new boolean[s.length()];
+    for (int i = 0; i < canReach.length; i++) {
+      if (i != 0 && !canReach[i - 1]) continue;
+      for (int j = i + 1; j <= canReach.length; j++) {
+        if (wordDict.contains(s.substring(i, j))) {
+          canReach[j - 1] = true;
+          if (j == canReach.length) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  // top down
   Map<String, Boolean> memo = new HashMap();
 
   public boolean wordBreak(String s, Set<String> wordDict) {

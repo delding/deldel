@@ -15,20 +15,18 @@
 
 public class Solution {
   public String simplifyPath(String path) {
-    Stack<String> st = new Stack<>();
-    String[] p = path.split("/");
-    for (String s : p) {
-      if (s.equals(".")) {
-        continue;
-      } else if (s.equals("..")) {
+    Deque<String> st = new ArrayDeque<>();
+    for (String p : path.split("/")) {
+      if (p.equals("..")) {
         if (!st.isEmpty()) st.pop();
-      } else if (!s.isEmpty()) st.push(s);
+      }
+      else if (p.equals(".")) continue;
+      else if (!p.isEmpty()) st.push(p);
     }
     String ret = "";
     while (!st.isEmpty()) {
       ret = "/" + st.pop() + ret;
     }
-    if (ret == "") ret = "/";
-    return ret;
+    return ret.isEmpty() ? "/" : ret;
   }
 }

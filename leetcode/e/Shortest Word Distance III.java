@@ -17,46 +17,19 @@
 
 public class Solution {
   public int shortestWordDistance(String[] words, String word1, String word2) {
-    if (word1.equals(word2)) return specialDist(words, word1, word2);
-
-    int dist = -1;
-    int idx1 = -1;
-    int idx2 = -1;
+    int p1 = -1, p2 = -1;
+    int d = Integer.MAX_VALUE;
     for (int i = 0; i < words.length; i++) {
       if (words[i].equals(word1)) {
-        idx1 = i;
-        if (idx2 == -1) {
-          continue;
-        } else {
-          if (dist == -1) dist = idx1 - idx2;
-          else dist = Math.min(dist, idx1 - idx2);
-        }
+        if (p2 != -1) d = Math.min(d, i - p2);
+        if (word1.equals(word2) && p1 != -1) d = Math.min(d, i - p1);
+        p1 = i;
       }
-      if (words[i].equals(word2)) {
-        idx2 = i;
-        if (idx1 == -1) {
-          continue;
-        } else {
-          if (dist == -1) dist = idx2 - idx1;
-          else dist = Math.min(dist, idx2 - idx1);
-        }
+      if (!word1.equals(word2) && words[i].equals(word2)) {
+        if (p1 != -1) d = Math.min(d, i - p1);
+        p2 = i;
       }
     }
-    return dist;
-  }
-
-  private int specialDist(String[] words, String word1, String word2) {
-    int idx = -1;
-    int dist = Integer.MAX_VALUE;
-    for (int i = 0; i < words.length; i++) {
-      if (words[i].equals(word1)) {
-        if (idx == -1) idx = i;
-        else {
-          dist = Math.min(dist, i - idx);
-          idx = i;
-        }
-      }
-    }
-    return dist;
+    return d;
   }
 }

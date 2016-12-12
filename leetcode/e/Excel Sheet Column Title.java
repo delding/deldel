@@ -14,12 +14,13 @@
 
 public class Solution {
   public String convertToTitle(int n) {
-    StringBuilder ret = new StringBuilder();
+    String t = "";
+    // convert to 26-digit
     while (n != 0) {
-      char c = (char) ((n - 1) % 26 + 'A');
-      ret.append(c);
-      n = (n - 1) / 26;
+      int q = --n % 26;
+      n = n / 26;
+      t = (char) ('A' + q) + t;
     }
-    return ret.reverse().toString();
+    return t;
   }
 }

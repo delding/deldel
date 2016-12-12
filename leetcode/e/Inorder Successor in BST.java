@@ -15,24 +15,21 @@
  */
 public class Solution {
   public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-    TreeNode successor = null;
-    if (p.right != null) { // if p has right subtree, successor is the min value in right subtree
-      successor = p.right;
-      while (successor.left != null) {
-        successor = successor.left;
-      }
-      return successor;
+    if (p.right != null) {
+      p = p.right;
+      while (p.left != null) p = p.left;
+      return p;
     } else {
-      while (true) { // if p has no right subtree, successor is the first node on the path from p to root when making a right turn, i.e. the last vale bigger than p on the path root to p
-        if (p.val < root.val) {
-          successor = root;
+      TreeNode lastRightParent = null;
+      while (root != p) {
+        if (root.val > p.val) {
+          lastRightParent = root;
           root = root.left;
-        } else if (p.val > root.val) {
+        } else {
           root = root.right;
-        } else { // root == p
-          return successor;
         }
       }
+      return lastRightParent;
     }
   }
 }

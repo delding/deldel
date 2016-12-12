@@ -10,33 +10,52 @@
  * Could you solve it in O(nk) runtime?
  */
 
-// todo: O(nk)
 public class Solution {
-  // DP
-  // minCosts[i][j]: the minimum total cost for painting i+1 houses when i-th house with j-th color
-  // minCosts[i][j] = Min over all k {minCosts[i-1][k] + costs[i][j]}, k != j
-  public int minCostII(int[][] costs) {
+  public int minCostII1(int[][] costs) {
     int n = costs.length;
-    if (n == 0) return 0;
+    if (n == 0 || costs[0].length == 0) return 0;
     int k = costs[0].length;
-    int[][] minCosts = new int[n][k];
-    for (int j = 0; j < k; j++) {
-      minCosts[0][j] = costs[0][j];
-    }
+    int[] pre = Arrays.copyOf(costs[0], k);
+    int[] cur = new int[k];
     for (int i = 1; i < n; i++) {
       for (int j = 0; j < k; j++) {
-        int minCost = Integer.MAX_VALUE;
-        for (int kk = 0; kk < k; kk++) {
-          if (kk == j) continue;
-          minCost = Math.min(minCost, minCosts[i - 1][kk] + costs[i][j]);
+        cur[j] = Integer.MAX_VALUE;
+        for (int h = 0; h < k; h++) {
+          if (h != j) {
+            cur[j] = Math.min(cur[j], pre[h] + costs[i][j]);
+          }
         }
-        minCosts[i][j] = minCost;
       }
+      pre = Arrays.copyOf(cur, k);
     }
-    int rst = minCosts[n - 1][0];
-    for (int j = 1; j < k; j++) {
-      rst = Math.min(rst, minCosts[n - 1][j]);
+    int min = pre[0];
+    for (int cost : pre) min = Math.min(min, cost);
+    return min;
+  }
+
+  // O(nk) use min1 and min2 to track the indices of the 1st and 2nd smallest cost till previous house,
+  // if the current color's index is same as min1, then we have to go with min2, otherwise we can safely go with min
+  public int minCostII(int[][] costs) {
+    int n = costs.length;
+    if (n == 0 || costs[0].length == 0) return 0;
+    int k = costs[0].length;
+    int preMin = 0, pre2ndMin = 0, minIdx = -1;
+    for (int i = 0; i < n; i++) {
+      int curMin = 0, cur2ndMin = 0, curMinIdx = -1;
+      for (int j = 0; j < k; j++) {
+        costs[i][j] += j == minIdx ? pre2ndMin : preMin;
+        if (curMin == 0 || costs[i][j] < curMin) {
+          cur2ndMin = curMin;
+          curMin = costs[i][j];
+          curMinIdx = j;
+        } else if (cur2ndMin == 0 || costs[i][j] < cur2ndMin) {
+          cur2ndMin = costs[i][j];
+        }
+      }
+      preMin = curMin;
+      pre2ndMin = cur2ndMin;
+      minIdx = curMinIdx;
     }
-    return rst;
+    return preMin;
   }
 }

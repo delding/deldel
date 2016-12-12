@@ -8,23 +8,24 @@
 
 public class Solution {
   public List<List<Integer>> permuteUnique(int[] nums) {
-    List<List<Integer>> ret = new ArrayList<>();
-    dfs(nums, new boolean[nums.length], new ArrayList<Integer>(), ret);
-    return ret;
+    List<List<Integer>> res = new ArrayList<>();
+    dfs(nums, new boolean[nums.length], res, new ArrayList<>());
+    return res;
   }
 
-  void dfs(int[] nums, boolean[] used, List<Integer> cur, List<List<Integer>> ret) {
-    if (cur.size() == nums.length) ret.add(new ArrayList<>(cur));
-    else {
-      Set<Integer> localUsed = new HashSet<>();
+  void dfs(int[] nums, boolean[] used, List<List<Integer>> res, List<Integer> perm) {
+    if (perm.size() == nums.length) {
+      res.add(new ArrayList<>(perm));
+    } else {
+      Set<Integer> usedLocal = new HashSet<>();
       for (int i = 0; i < nums.length; i++) {
-        if (!used[i] && !localUsed.contains(nums[i])) {
-          localUsed.add(nums[i]);
-          cur.add(nums[i]);
+        if (!used[i] && !usedLocal.contains(nums[i])) { // local duplicates can lead next level of search tree has duplicate branches
+          usedLocal.add(nums[i]);
           used[i] = true;
-          dfs(nums, used, cur, ret);
+          perm.add(nums[i]);
+          dfs(nums, used, res, perm);
           used[i] = false;
-          cur.remove(cur.size() - 1);
+          perm.remove(perm.size() - 1);
         }
       }
     }

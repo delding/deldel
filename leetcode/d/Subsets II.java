@@ -18,24 +18,21 @@
 public class Solution {
   public List<List<Integer>> subsetsWithDup(int[] nums) {
     Arrays.sort(nums);
-    List<List<Integer>> ret = new ArrayList();
-    dfs(nums, 0, new ArrayList<Integer>(), ret);
-    return ret;
+    List<List<Integer>> sets = new ArrayList<>();
+    dfs(sets, new ArrayList<Integer>(), nums, 0);
+    return sets;
   }
 
-  private void dfs(int[] nums, int idx, List<Integer> curr, List<List<Integer>> ret) {
-    if (idx == nums.length) ret.add(new ArrayList<Integer>(curr));
-    else {
-      int prev = nums[idx];
+  void dfs(List<List<Integer>> sets, List<Integer> set, int[] nums, int idx) {
+    if (idx == nums.length) {
+      sets.add(new ArrayList<>(set));
+    } else {
       for (int i = idx; i <= nums.length; i++) {
-        if (i == nums.length) dfs(nums, i, curr, ret); // add nothing at current recursion
-        else if (i > idx && nums[i] == prev)
-          continue; // skip duplicates given nums[] is sorted, treat duplicate numbers as a group
-        else {
-          curr.add(nums[i]);
-          dfs(nums, i + 1, curr, ret);
-          curr.remove(curr.size() - 1);
-          prev = nums[i];
+        if (i == nums.length) dfs(sets, set, nums, i);
+        else if (i == idx || nums[i] != nums[i - 1]) {
+          set.add(nums[i]);
+          dfs(sets, set, nums, i + 1);
+          set.remove(set.size() - 1);
         }
       }
     }

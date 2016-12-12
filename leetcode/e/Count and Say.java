@@ -10,36 +10,29 @@
  * Note: The sequence of integers will be represented as a string.
  **/
 
+// only 1, 2, 3 can appear
+// proof: in order to have 4, must have 1111,
+// if first 1 is at odd position, then it is interpreted from 11, which should be 21 instead
+// if fisrt 1 is at even position, a1111b, then it is interpreted from a one, one one, one b, which should instead be (a+1) one, one b
+// so 1111 is not possible
 public class Solution {
   public String countAndSay(int n) {
-    String pre = "1";
-    StringBuilder cur = new StringBuilder(); // bug: don't concat strng use stringbuilder otherwise TLE
-    while (n-- > 1) {
-      char last = '0';
+    String num = "1";
+    while (--n > 0) {
+      String next = "";
       int count = 0;
-      for (int i = 0; i <= pre.length(); ) {
-        if (i == pre.length()) {
-          if (count > 0) {
-            cur.append(count);
-            cur.append(last);
-          }
-          break;
-        }
-        char c = pre.charAt(i);
-        if (last == '0' || c == last) {
-          last = c;
-          count++;
-          i++;
-        } else {
-          cur.append(count);
-          cur.append(last);
-          count = 0;
-          last = '0';
+      for (int i = 0; i <= num.length(); i++) {
+        if (count == 0) count++;
+        else {
+          if (i == num.length() || num.charAt(i) != num.charAt(i - 1)) {
+            next += count;
+            next += num.charAt(i - 1);
+            count = 1;
+          } else count++;
         }
       }
-      pre = cur.toString();
-      cur = new StringBuilder();
+      num = next;
     }
-    return pre;
+    return num;
   }
 }

@@ -17,69 +17,107 @@
 
 public class Solution {
   public List<String> findWords(char[][] board, String[] words) {
-    List<String> ret = new ArrayList();
+    List<String> found = new ArrayList<>();
     int m = board.length;
-    if (m == 0) return ret;
+    if (m == 0 || board[0].length == 0) return found;
     int n = board[0].length;
-    boolean[][] visited = new boolean[m][n];
-    TrieNode root = new TrieNode();
-    for (String word : words) {
-      addWord(root, word);
-    }
+    Trie trie = new Trie();
+    for (String w : words) trie.add(w);
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
-        dfs(board, visited, i, j, ret, root);
+        search(found, trie.root, board, i, j);
+      }
+    }
+    return found;
+  }
+
+  static int[][] dirs = new int[][] {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+  void search(List<String> found, TrieNode tn, char[][] board, int i, int j) {
+    char c = board[i][j];
+    board[i][j] = '\0'; // mark visited
+    if (tn.children[c - 'a'] != null) {
+      if (!tn.children[c - 'a'].word.isEmpty()) {
+        found.add(tn.children[c - 'a'].word); // add word here
+        tn.children[c - 'a'].word = ""; // remove duplicate result
+      }
+      for (int[] dir : dirs) {
+        int x = i + dir[0];
+        int y = j + dir[1];
+        if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && board[x][y] != '\0') {
+          search(found, tn.children[c - 'a'], board, x, y);
+        }
+      }
+    }
+    board[i][j] = c;
+  }
+
+
+  class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    String word = "";
+  }
+
+  class Trie {
+    TrieNode root = new TrieNode();
+
+    void add(String word) {
+      TrieNode tn = root;
+      for (char c : word.toCharArray()) {
+        if (tn.children[c - 'a'] == null) {
+          tn.children[c - 'a'] = new TrieNode();
+        }
+        tn = tn.children[c - 'a'];
+      }
+      tn.word = word;
+    }
+  }
+}
+
+public class Solution {
+  public List<String> findWords(char[][] board, String[] words) {
+    List<String> ret = new ArrayList<>();
+    TrieNode root = new TrieNode();
+    for (String w : words) addWord(root, w);
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[0].length; j++) {
+        search(board, root, ret, i, j, "");
       }
     }
     return ret;
   }
 
-  private void dfs(char[][] board, boolean[][] visited, int i, int j, List<String> ret, TrieNode root) {
-    int idx = board[i][j] - 'a';
-    if (root.edges[idx] == null) return;
-    if (root.edges[idx].isWord) {
-      if (!root.edges[idx].searched) { // ERROR: board may have multiple path containing same word, so word could be added multiple time
-        ret.add(root.edges[idx].word); // ERROR: must check if the child is a word right now, because dfs can stop if this search after this char in the board has no where to go
-        root.edges[idx].searched = true;
+  void search(char[][] b, TrieNode n, List<String> ret, int i, int j, String word) {
+    if (n.isWord) {
+      ret.add(word);
+      n.isWord = false; // avoid duplication
+    }
+    if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || b[i][j] == '.') return;
+    int[][] dir = new int[][] {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    char c = b[i][j];
+    int idx = c - 'a';
+    b[i][j] = '.'; // set as visited
+    if (n.ch[idx] != null) {
+      for (int[] d : dir) {
+        search(b, n.ch[idx], ret, i + d[0], j + d[1], word + c);
       }
     }
-    visited[i][j] = true;
-    for (int r = -1; r <= 1; r++) {
-      for (int c = -1; c <= 1; c++) {
-        if ((r == 0 && c != 0) || (r != 0 && c == 0)) {
-          int x = i + r;
-          int y = j + c;
-          if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && !visited[x][y]) {
-            dfs(board, visited, x, y, ret, root.edges[idx]);
-          }
-        }
-      }
-    }
-    visited[i][j] = false;
+    b[i][j] = c; // reset
   }
 
-  private class TrieNode {
-    String word;
-    boolean isWord;
-    TrieNode[] edges;
-    boolean searched;
-
-    TrieNode() {
-      word = "";
-      isWord = false;
-      edges = new TrieNode[26];
-      searched = false;
-    }
-  }
-
-  private void addWord(TrieNode root, String word) {
+  void addWord(TrieNode root, String word) {
+    TrieNode cur = root;
     for (char c : word.toCharArray()) {
-      int i = c - 'a';
-      if (root.edges[i] == null) root.edges[i] = new TrieNode();
-      root = root.edges[i];
+      int idx = c - 'a';
+      if (cur.ch[idx] == null) cur.ch[idx] = new TrieNode();
+      cur = cur.ch[idx];
     }
-    root.isWord = true;
-    root.word = word;
+    cur.isWord = true;
   }
 
+  static class TrieNode {
+    TrieNode[] ch = new TrieNode[26];
+    boolean isWord = false;
+  }
 }
+

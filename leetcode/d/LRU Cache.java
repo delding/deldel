@@ -6,82 +6,155 @@
  **/
 
 public class LRUCache {
-  private Node head = null;
-  private Node tail = null;
-  private int size = 0;
-  private Map<Integer, Node> table = new HashMap(); // key to node
-  private int capacity;
+
+  Node<Integer, Integer> head;
+  Node<Integer, Integer> tail;
+  int cap;
+  Map<Integer, Node<Integer, Integer>> cache = new HashMap<>();
 
   public LRUCache(int capacity) {
-    this.capacity = capacity;
+    cap = capacity;
   }
 
   public int get(int key) {
-    Node node = table.get(key);
-    if (node == null) return -1;
-    refresh(node);
-    return node.val;
+    Node<Integer, Integer> n = cache.get(key);
+    if (n == null) return -1;
+    else {
+      moveToHead(n);
+      return n.val;
+    }
   }
 
   public void set(int key, int value) {
-    if (capacity == 0) return;
-    Node node = table.get(key);
-    if (node != null) {
-      node.val = value;
-      refresh(node);
+    Node<Integer, Integer> n = cache.get(key);
+    if (n != null) {
+      n.val = value;
+      moveToHead(n);
     } else {
-      node = new Node(key, value);
-      table.put(key, node);
-      if (size < capacity) {
-        if (size == 0) tail = node;
-        if (size > 0) head.prev = node; // ERROR: MUST SET HEAD PREV
-        node.next = head;
-        head = node;
-        size++;
-      } else { // size = capacity
-        table.remove(tail.key);
-        if (capacity == 1) {
-          head = node;
-          tail = node;
-        } else {
-          Node secondlast = tail.prev;
-          tail.prev = null; // ERROR: SET PREV
-          tail = secondlast;
-          tail.next = null;
-          node.next = head;
-          head.prev = node; // ERROR: MUST SET PREV!!!
-          head = node;
-        }
+      n = new Node<>(key, value);
+      if (cache.size() == 0) {
+        tail = n;
+      } else {
+        head.prev = n;
+        n.next = head;
+      }
+      head = n;
+      cache.put(key, n); //
+      if (cache.size() > cap) {
+        cache.remove(tail.key);
+        tail = tail.prev;
+        tail.next = null;
       }
     }
   }
 
-  private void refresh(Node node) { // move to top
-    if (head == node) return;
-    if (tail == node) {
-      tail = node.prev;
-      tail.next = null;
-    } else {
-      Node next = node.next;
-      Node prev = node.prev;
-      prev.next = next;
-      next.prev = prev; // ERROR: MUST set next node's prev
+  void moveToHead(Node<Integer, Integer> n) {
+    if (head != n) {
+      n.prev.next = n.next;
+      if (n.next != null) {
+        n.next.prev = n.prev;
+      } else {
+        tail = n.prev;
+      }
+      n.prev = null;
+      n.next = head;
+      head.prev = n;
+      head = n; //
     }
-    node.next = head; // ERROR: node.next = head, not node.next = head.next
-    head.prev = node; // ERROR: MUST SET HEAD's PREV
-    node.prev = null;
-    head = node;
   }
 
-  private class Node {
+  static final class Node<K, V> {
+    K key;
+    V val;
+    Node<K, V> prev = null;
+    Node<K, V> next = null;
+
+    public Node(K k, V v) {
+      key = k;
+      val = v;
+    }
+  }
+}
+
+// LFU cache
+public class LFUCache {
+  class Node{
+    int key;
+    int value;
     Node prev;
     Node next;
-    int val;
-    int key;
+    long frequency = 0;
 
-    public Node(int k, int v) {
-      val = v;
-      key = k;
+    public Node(int key, int value){
+      this.key = key;
+      this.value = value;
     }
+  }
+  private HashMap<Integer, Node> map = new HashMap<>();
+  private HashMap<Long, Node> frequencies = new HashMap<>();
+  private int count = 0;
+  private int capacity = 10;
+  private long lowestFreq = 0;
+
+  public LFUCache(int capacity) {
+    this.capacity = capacity;
+  }
+
+  public Integer get(int key){
+    Node node = getNode(key);
+    if(node == null) return null;
+    else return node.value;
+  }
+
+  private Node getNode(int key){
+    if(!map.containsKey(key)){
+      return null;
+    }
+    Node node = map.get(key);
+    if(node.prev == null && node.next == null){ //only one node
+      frequencies.remove(node.frequency);
+      if(node.frequency == lowestFreq){
+        lowestFreq++;
+      }
+    } else  {
+      if(node.prev != null) node.prev.next = node.next;
+      else frequencies.put(node.frequency, node.next);
+      if(node.next != null) node.next.prev = node.prev;
+    }
+    node.frequency++;
+    if(!frequencies.containsKey(node.frequency)){
+      frequencies.put(node.frequency, node);
+    } else {
+      Node head = frequencies.get(node.frequency);
+      node.next = head.next;
+      if(head.next != null) head.next.prev = node;
+      head.next = node;
+      node.prev = head;
+    }
+    return node;
+  }
+
+  public void set(int key, int value){
+    Node node = getNode(key);
+    if(node != null){
+      node.value = value;
+      return;
+    }
+    node = new Node(key, value);
+    if(count == capacity){
+      //clean lowest frequency node;
+      Node head = frequencies.get(lowestFreq);
+      if(head != null){
+        map.remove(head.key);
+        head = head.next;
+        count--;
+      }
+      if(head == null) frequencies.remove(lowestFreq);
+      else frequencies.put(lowestFreq, head);
+    }
+    lowestFreq = 0;
+    map.put(key, node);
+    frequencies.put(node.frequency, node);
+    count++;
   }
 }

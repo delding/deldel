@@ -8,21 +8,18 @@
  **/
 
 public class Solution {
-  // three way partition
-  public void sortColors(int[] nums) {
-    int l = 0;
-    int m = 0;
-    int r = nums.length - 1;
-    while (m <= r) {
-      if (nums[m] == 1) m++;
-      else if (nums[m] == 0) swap(nums, l++, m++);
-      else swap(nums, m, r--);
+    // three way partition
+    public void sortColors(int[] nums) {
+      for (int l = 0, i = 0, r = nums.length - 1; i <= r;) {
+        if (nums[i] == 0) swap(l++, i++, nums);
+        else if (nums[i] == 1) i++;
+        else swap(r--, i, nums);
+      }
     }
-  }
 
-  private void swap(int[] nums, int i, int j) {
-    int tmp = nums[i];
-    nums[i] = nums[j];
-    nums[j] = tmp;
-  }
+    void swap(int i, int j, int[] nums) {
+      int tmp = nums[i];
+      nums[i] = nums[j];
+      nums[j] = tmp;
+    }
 }

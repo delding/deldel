@@ -14,39 +14,28 @@
  * }
  */
 public class Solution {
-
+  // reverse second half then compare
   public boolean isPalindrome(ListNode head) {
-    if (head == null || head.next == null)
-      return true; // ERROR: len must bigger than 1, otherwise reverse method will call null
-    ListNode dummy = new ListNode(0);
-    dummy.next = head;
-    ListNode fast = dummy;
-    ListNode slow = dummy; // dummy enable slow at one node before middle when odd length, and less node of middle when even length
-    while (fast.next != null && fast.next.next != null) { // fast.next != null means odd length, fast.next==null means even length
-      fast = fast.next.next;
-      slow = slow.next;
+    if (head == null || head.next == null) return true; // length = 1 edge case, which makes head of second half null
+    ListNode f = head, s = head;
+    while (f.next != null && f.next.next != null) {
+      f = f.next.next;
+      s = s.next;
     }
-    if (fast.next != null) slow = slow.next.next;
-    else slow = slow.next;
-    ListNode reverse = reverse(slow);
-    while (reverse != null) {
-      if (reverse.val != head.val) return false;
-      reverse = reverse.next;
+    ListNode h = s.next; // head of second half whether length is even or odd, but length must > 1
+    while (h.next != null) {
+      ListNode n = h.next;
+      h.next = n.next;
+      n.next = s.next;
+      s.next = n;
+    }
+    s = s.next;
+    while (s != null) {
+      if (head.val != s.val) return false;
       head = head.next;
+      s = s.next;
     }
     return true;
-  }
-
-  private ListNode reverse(ListNode head) {
-    ListNode dummy = new ListNode(0);
-    dummy.next = head;
-    while (head.next != null) {
-      ListNode next = head.next;
-      head.next = next.next;
-      next.next = dummy.next;
-      dummy.next = next;
-    }
-    return dummy.next;
   }
 
   // recursive method, has bug...

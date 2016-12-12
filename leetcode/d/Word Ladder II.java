@@ -16,73 +16,74 @@
  * ]
  **/
 
-// TLE: todo, don't pass that large data set where each word only has two character, need to optimize for this situation
 public class Solution {
-
-  // must be able to track multiple edges from different vertex at current level to the same vertex at next level
   public List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordList) {
-    Set<String> visited = new HashSet<String>();
-    Set<String> inqueue = new HashSet<String>();
-    Queue<String> q = new LinkedList<String>();
-    Map<String, List<String>> edges = new HashMap();
+    List<List<String>> ladders = new ArrayList<>();
+    if (beginWord.equals(endWord)) {
+      ladders.add(Arrays.asList(beginWord));
+      return ladders;
+    }
+    Map<String, Set<String>> backtrack = new HashMap<>();
+    boolean found = false;
+    Queue<String> q = new ArrayDeque<>();
+    Set<String> visited = new HashSet<>();
     q.add(beginWord);
-    while (!edges.containsKey(endWord) && !q.isEmpty()) {
+    while (!found && !q.isEmpty()) {
+      for (String w : q) { // mark all words in previous level as visited
+        visited.add(w);
+      }
       int size = q.size();
-      while (size-- != 0) {
-        String word = q.poll();
-        visited.add(word);
-        for (String neighbor : getNeighbors(wordList, word)) {
-          if (!visited.contains(neighbor)) {
-            List<String> backvertices = edges.get(neighbor);
-            if (backvertices == null) {
-              backvertices = new ArrayList<String>();
-              edges.put(neighbor, backvertices);
+      Set<String> added = new HashSet<>();
+      while (size-- > 0) {
+        String w = q.poll();
+        for (String nei : neighbors(w, wordList)) {
+          if (nei.equals(endWord)) found = true;
+          if (!visited.contains(nei)) { // explore all edges to next level
+            Set<String> parents = backtrack.get(nei);
+            if (parents == null) {
+              parents = new HashSet<String>();
+              backtrack.put(nei, parents);
             }
-            backvertices.add(word);
-            if (!inqueue.contains(neighbor)) {
-              q.add(neighbor);
-              inqueue.add(neighbor);
+            parents.add(w); // explore every edges
+            if (!added.contains(nei)) {
+              q.add(nei);
+              added.add(nei);
             }
           }
         }
       }
     }
-    List<List<String>> paths = new ArrayList<List<String>>();
-    List<String> path = new ArrayList<String>();
-    if (edges.containsKey(endWord)) { // ERROR: need this condition to guard the case when ladder is not found
-      dfs(paths, path, edges, endWord, beginWord);
-    }
-    return paths;
+    if (found) dfs(endWord, beginWord, backtrack, ladders, new ArrayList<String>());
+    return ladders;
   }
 
-  private void dfs(List<List<String>> paths, List<String> path, Map<String, List<String>> edges, String end, String begin) {
-    path.add(end); // ERROR: MUST add here, my path doesn't add first word
+  void dfs(String end, String begin, Map<String, Set<String>> backtrack, List<List<String>> ladders, List<String> ladder) {
+    ladder.add(end);
     if (end.equals(begin)) {
-      List<String> copy = new ArrayList<String>(path);
-      Collections.reverse(copy);
-      paths.add(copy);
+      ladders.add(new ArrayList<>(ladder));
+      Collections.reverse(ladders.get(ladders.size() - 1));
     } else {
-      for (String prev : edges.get(end)) {
-        dfs(paths, path, edges, prev, begin);
+      for (String parent : backtrack.get(end)) {
+        dfs(parent, begin, backtrack, ladders, ladder);
       }
     }
-    path.remove(path.size() - 1);
+    ladder.remove(ladder.size() - 1);
   }
 
-  private Set<String> getNeighbors(Set<String> wordList, String word) {
-    Set<String> neighbors = new HashSet<String>();
-    char[] arr = word.toCharArray();
-    for (int i = 0; i < arr.length; i++) {
-      for (char j = 'a'; j <= 'z'; j++) { // iterate over 26 char is more effcient than below which iterate all dictionary
-        if (j != arr[i]) {
-          char c = arr[i];
-          arr[i] = j;
-          String w = new String(arr);
-          if (wordList.contains(w)) neighbors.add(w);
-          arr[i] = c;
+  Set<String> neighbors(String w, Set<String> dict) {
+    char[] cs = w.toCharArray();
+    Set<String> ret = new HashSet<>();
+    for (int i = 0; i < cs.length; i++) {
+      char ci = cs[i];
+      for (char c = 'a'; c <= 'z'; c++) {
+        if (c != ci) {
+          cs[i] = c;
+          String nei = String.valueOf(cs);
+          if (dict.contains(nei)) ret.add(nei);
         }
       }
+      cs[i] = ci;
     }
-    return neighbors;
+    return ret;
   }
 }

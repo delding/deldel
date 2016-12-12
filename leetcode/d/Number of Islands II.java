@@ -73,3 +73,56 @@ public class Solution {
     return pos;
   }
 }
+
+// solution 2
+public class Solution {
+  public List<Integer> numIslands2(int m, int n, int[][] positions) {
+    List<Integer> counts = new ArrayList<>();
+    int count = 0;
+    Node[][] b = new Node[m][n];
+    for (int[] pos : positions) {
+      int x = pos[0];
+      int y = pos[1];
+      b[x][y] = new Node(); // better to first check if b[x][y] == null, that is it's water
+      count++;
+      for (int[] d : new int[][] {{0, 1}, {0, -1}, {1, 0}, {-1 ,0}}) {
+        int i = x + d[0];
+        int j = y + d[1];
+        if (i >= 0 && j >= 0 && i < m && j < n) {
+          if (b[i][j] != null && union(b[x][y], b[i][j])) {
+            count--;
+          }
+        }
+      }
+      counts.add(count);
+    }
+    return counts;
+  }
+
+  static class Node {
+    Node parent;
+    int size = 1;
+    Node () {
+      parent = this;
+    }
+  }
+
+  boolean union(Node n1, Node n2) {
+    if (n1.size > n2.size) union(n2, n1);
+    Node p1 = find(n1);
+    Node p2 = find(n2);
+    if (p1 == p2) return false;
+    p1.parent = p2;
+    p2.size += p1.size;
+    return true;
+  }
+
+  Node find(Node n) {
+    while (n.parent != n) {
+      Node p = n.parent;
+      n.parent = p.parent; // compression
+      n = p;
+    }
+    return n;
+  }
+}

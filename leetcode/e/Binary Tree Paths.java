@@ -22,23 +22,30 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
 public class Solution {
   public List<String> binaryTreePaths(TreeNode root) {
-    List<String> paths = new ArrayList<String>();
-    if (root == null) return paths;
-    dfs(root, paths, "");
-    return paths;
+    List<String> ret = new ArrayList<>();
+    if (root == null) return ret;
+    dfs(root, ret, "");
+    return ret;
   }
 
-  private void dfs(TreeNode root, List<String> paths, String path) {
-    if (path.isEmpty()) path += root.val;
-    else path += "->" + root.val;
-    if (root.left == null && root.right == null) {
-      paths.add(path);
-      return;
+  void dfs(TreeNode cur, List<String> paths, String p) {
+    p = p.isEmpty() ? String.valueOf(cur.val) : p + "->" + cur.val;
+    if (cur.left == null && cur.right == null) {
+      paths.add(p);
     } else {
-      if (root.left != null) dfs(root.left, paths, path);
-      if (root.right != null) dfs(root.right, paths, path);
+      if (cur.left != null) dfs(cur.left, paths, p);
+      if (cur.right != null) dfs(cur.right, paths, p);
     }
   }
 }

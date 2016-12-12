@@ -9,30 +9,23 @@
  */
 
 public class Solution {
+  // quickselect
   public int findKthLargest(int[] nums, int k) {
-    return quickSelect(nums, k, 0, nums.length - 1);
+    return findKth(nums, k, 0, nums.length - 1);
   }
 
-  int quickSelect(int[] nums, int k, int l, int r) {
-    int pivotIdx = partition(nums, l, r);
-    // kth smallest
-    //if (pivotIdx - l + 1==k) return nums[pivotIdx];
-    //else if (pivotIdx -l+1> k) return quickSelect(nums, k, l, pivotIdx-1);
-    //else return quickSelect(nums, k-(pivotIdx-l+1), pivotIdx+1, r);
-    // kth largest
-    if (r - pivotIdx + 1 == k) return nums[pivotIdx];
-    else if (r - pivotIdx + 1 > k) return quickSelect(nums, k, pivotIdx + 1, r);
-    else return quickSelect(nums, k - (r - pivotIdx + 1), l, pivotIdx - 1);
+  int findKth(int nums[], int k, int l, int r) {
+    int pivot = partition(nums, l, r);
+    if (r - pivot + 1 == k) return nums[pivot];
+    else if (r - pivot + 1 > k) return findKth(nums, k, pivot + 1, r);
+    else return findKth(nums, k - (r - pivot + 1), l, pivot - 1);
   }
 
-  int partition(int[] nums, int left, int right) {
-    int pivot = nums[right];
-    int l = left;
-    int i = left;
-    int r = right;
-    while (i <= r) {
-      if (nums[i] < pivot) swap(nums, i++, l++);
-      else if (nums[i] > pivot) swap(nums, i, r--);
+  int partition(int[] nums, int l, int r) {
+    int val = nums[r];
+    for (int i = l; i <= r;) {
+      if (nums[i] < val) swap(nums, i++, l++);
+      else if (nums[i] > val) swap(nums, i, r--);
       else i++;
     }
     return l;
@@ -42,5 +35,15 @@ public class Solution {
     int tmp = nums[i];
     nums[i] = nums[j];
     nums[j] = tmp;
+  }
+
+  // minheap
+  public int findKthLargest1(int[] nums, int k) {
+    PriorityQueue<Integer> q = new PriorityQueue<>(k);
+    for (int num : nums) {
+      q.add(num);
+      if (q.size() > k) q.poll();
+    }
+    return q.poll();
   }
 }

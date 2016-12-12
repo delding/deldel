@@ -10,28 +10,21 @@
  **/
 
 public class Solution {
+  // bfs
   public List<String> removeInvalidParentheses(String s) {
     Set<String> res = new HashSet<>();
     Queue<String> q = new ArrayDeque<>();
-    boolean done = false;
-    q.add(s);
-    if (isValid(s)) { // edge case!
-      res.add(s);
-      done = true;
-    }
-    while (!done && !q.isEmpty()) {
-      int size = q.size();
-      Set<String> nextLevel = new HashSet<>(); // avoid duplicates otherwise TLE
-      while (size-- > 0) {
-        String str = q.poll();
-        for (int i = 0; i < str.length(); i++) {
-          if (str.charAt(i) == '(' || str.charAt(i) == ')') {
-            String child = str.substring(0, i) + str.substring(i + 1);
-            if (isValid(child)) {
-              done = true;
-              res.add(child);
-            } else {
-              nextLevel.add(child);
+    q.offer(s);
+    while (!q.isEmpty() && res.isEmpty()) {
+      Set<String> nextLevel = new HashSet<>(); // avoid duplicate in next level
+      while (!q.isEmpty()) {
+        String paren = q.poll();
+        if (valid(paren)) res.add(paren);
+        if (res.isEmpty()) {
+          for (int i = 0; i < paren.length(); i++) {
+            if (paren.charAt(i) == '(' || paren.charAt(i) == ')') {
+              String p = paren.substring(0, i) + paren.substring(i + 1);
+              nextLevel.add(p);
             }
           }
         }
@@ -41,15 +34,13 @@ public class Solution {
     return new ArrayList<String>(res);
   }
 
-  private boolean isValid(String s) {
-    int l = 0, r = 0;
-    for (char c : s.toCharArray()) {
-      if (c == '(') l++;
-      else if (c == ')') {
-        r++;
-        if (r > l) return false;
-      }
+  boolean valid(String paren) {
+    int diff = 0;
+    for (char p : paren.toCharArray()) {
+      if (p == '(') diff++;
+      if (p == ')') diff--;
+      if (diff < 0) return false;
     }
-    return r == l;
+    return diff == 0;
   }
 }

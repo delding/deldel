@@ -3,30 +3,35 @@
  */
 
 public class Solution {
+  // stack, largest rect in histogram
   public int maximalRectangle(char[][] matrix) {
-    if (matrix.length == 0 || matrix[0].length == 0) return 0;
-    int[] hist = new int[matrix[0].length];
-    int maxArea = 0;
-    for (int i = 0; i < matrix.length; i++) {
-      for (int j = 0; j < matrix[0].length; j++) {
+    int m = matrix.length;
+    if (m == 0 || matrix[0].length == 0) return 0;
+    int n = matrix[0].length;
+    int[] hist = new int[n];
+    int maximal = 0;
+    for (int i = 0; i < m; i++) { // histogram based on row i
+      for (int j = 0; j < n; j++) {
         hist[j] = matrix[i][j] == '0' ? 0 : hist[j] + 1;
       }
-      Stack<Integer> st = new Stack<>();
-      for (int j = 0; j < hist.length; ) {
-        if (!st.isEmpty() && hist[j] < hist[st.peek()]) {
+      Deque<Integer> st = new ArrayDeque<>();
+      for (int j = 0; j < n;) {
+        if (st.isEmpty() || hist[j] >= hist[st.peek()]) {
+          st.push(j++);
+        } else {
+          // elements on both side of st.pop(), (st.peek(), j) are >= hist[st.pop()]
+          // these elements have been poped out
           int h = hist[st.pop()];
-          int left = st.isEmpty() ? 0 : st.peek() + 1;
-          int w = j - left; // all elements between st.peek() + 1 and j - 1 inclusive are bigger than or equal to h
-          maxArea = Math.max(maxArea, w * h);
-        } else st.push(j++);
+          int l = st.isEmpty() ? 0 : st.peek() + 1;
+          maximal = Math.max(maximal, h * (j - l));
+        }
       }
       while (!st.isEmpty()) {
         int h = hist[st.pop()];
-        int left = st.isEmpty() ? 0 : st.peek() + 1;
-        int w = hist.length - left;
-        maxArea = Math.max(maxArea, w * h);
+        int l = st.isEmpty() ? 0 : st.peek() + 1;
+        maximal = Math.max(maximal, h * (n - l));
       }
     }
-    return maxArea;
+    return maximal;
   }
 }

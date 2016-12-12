@@ -34,21 +34,19 @@
  */
 public class Solution {
   public void flatten(TreeNode root) {
-    helper(root);
+    flat(root);
   }
 
-  private TreeNode helper(TreeNode root) {
-    if (root == null) return null;
-    TreeNode left = helper(root.left);
-    TreeNode right = helper(root.right);
-    if (left == null) root.right = right;
-    else {
-      root.right = left;
-      TreeNode tail = left;
-      while (tail.right != null) tail = tail.right;
-      tail.right = right;
+  TreeNode flat(TreeNode n) {
+    if (n == null) return n;
+    TreeNode l = flat(n.left);
+    TreeNode r = flat(n.right);
+    if (l != null) {
+      n.right = l;
+      while (l.right != null) l = l.right;
+      l.right = r;
     }
-    root.left = null;
-    return root;
+    n.left = null;
+    return n;
   }
 }

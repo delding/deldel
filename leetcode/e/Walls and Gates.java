@@ -1,4 +1,4 @@
-/*
+/**
  * You are given a m x n 2D grid initialized with these three possible values.
 
 -1 - A wall or an obstacle.
@@ -18,49 +18,34 @@ After running your function, the 2D grid should be:
   0  -1   3   4
   */
 public class Solution {
-  static final int INF = Integer.MAX_VALUE;
-
-  private class Pair {
-    int x;
-    int y;
-
-    public Pair(int x, int y) {
-      this.x = x;
-      this.y = y;
-    }
-  }
-
   public void wallsAndGates(int[][] rooms) {
     int m = rooms.length;
-    if (m == 0) return;
+    if (m == 0 || rooms[0].length == 0) return;
     int n = rooms[0].length;
-    if (n == 0) return;
-    Queue<Pair> q = new LinkedList<Pair>();
+    Queue<Integer> q = new ArrayDeque<>();
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
-        if (rooms[i][j] == 0) q.offer(new Pair(i, j));
-      }
-    }
-    int dist = 0;
-    while (!q.isEmpty()) {
-      dist++;
-      int size = q.size();
-      while (size-- > 0) {
-        Pair room = q.poll();
-        for (int i = -1; i <= 1; i++) {
-          for (int j = -1; j <= 1; j++) {
-            if (i != 0 && j != 0) continue; // (x-1,y), (x+1, y), (x, y-1), (x, y+1)
-            if (i == 0 && j == 0) continue;
-            int x = room.x + i;
-            int y = room.y + j;
-            if (x >= 0 && x < m && y >= 0 && y < n && rooms[x][y] == INF) {
-              rooms[x][y] = dist;
-              q.offer(new Pair(x, y));
-            }
-          }
+        if (rooms[i][j] == 0) {
+          q.add(i * n + j);
         }
       }
     }
-
+    int[][] dirs = new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    int dist = 1;
+    while (!q.isEmpty()) {
+      int size = q.size();
+      while (size-- > 0) {
+        int cell = q.poll();
+        for (int[] dir : dirs) {
+          int x = cell / n + dir[0];
+          int y = cell % n + dir[1];
+          if (x >= 0 && x < m && y >= 0 && y < n && rooms[x][y] == Integer.MAX_VALUE) { // INF means not visited
+            rooms[x][y] = dist; // update dist here, make it visited, so that if the cell is common neighbor of two in queue cells, this cell won't get added twice
+            q.add(x * n + y);
+          }
+        }
+      }
+      dist++;
+    }
   }
 }

@@ -22,25 +22,24 @@
 
 public class Solution {
   public List<Integer> postorderTraversal(TreeNode root) {
-    List<Integer> ret = new ArrayList<Integer>();
-    if (root == null) return ret;
-    Stack<TreeNode> st = new Stack();
-    TreeNode lastAdded = null;
-    while (root != null || !st.isEmpty()) {
-      if (root == null) {
-        root = st.peek();
-        if (root.right != null && root.right != lastAdded) root = root.right;
+    List<Integer> postorder = new ArrayList<>();
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    TreeNode pre = null;
+    while (root != null || !stack.isEmpty()) {
+      if (root != null) {
+        stack.push(root);
+        root = root.left;
+      } else {
+        root = stack.peek();
+        if (root.right != null && root.right != pre) root = root.right;
         else {
-          ret.add(root.val);
-          lastAdded = root;
-          st.pop();
+          stack.pop();
+          pre = root;
+          postorder.add(root.val);
           root = null;
         }
-      } else {
-        st.push(root);
-        root = root.left;
       }
     }
-    return ret;
+    return postorder;
   }
 }

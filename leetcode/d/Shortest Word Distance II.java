@@ -16,38 +16,27 @@
  */
 
 public class WordDistance {
-
-  Map<String, List<Integer>> indexes = new HashMap();
+  Map<String, List<Integer>> positions = new HashMap<>();
 
   public WordDistance(String[] words) {
     for (int i = 0; i < words.length; i++) {
-      String word = words[i];
-      List<Integer> list = indexes.get(word);
-      if (list == null) {
-        list = new ArrayList<Integer>();
-        indexes.put(word, list);
+      if (!positions.containsKey(words[i])) {
+        positions.put(words[i], new ArrayList<>());
       }
-      list.add(i); // Error: index is automatically from low to high, no need to sort
+      positions.get(words[i]).add(i);
     }
   }
 
   public int shortest(String word1, String word2) {
-    List<Integer> list1 = indexes.get(word1);
-    List<Integer> list2 = indexes.get(word2);
-    int dist = Integer.MAX_VALUE;
-    for (int i = 0, j = 0; i < list1.size() && j < list2.size(); ) { // Either update i or update j, only one of them
-      int idx1 = list1.get(i);
-      int idx2 = list2.get(j);
-      if (idx1 < idx2) {
-        dist = Math.min(dist, idx2 - idx1);
-        i++;
-      } else {
-        dist = Math.min(dist, idx1 - idx2);
-        j++;
-      }
+    int d = Integer.MAX_VALUE;
+    List<Integer> p1 = positions.get(word1);
+    List<Integer> p2 = positions.get(word2);
+    for (int i1 = 0, i2 = 0; i1 < p1.size() && i2 < p2.size();) {
+      d = Math.min(d, Math.abs(p1.get(i1) - p2.get(i2)));
+      if (p1.get(i1) > p2.get(i2)) i2++;
+      else i1++;
     }
-
-    return dist;
+    return d;
   }
 }
 

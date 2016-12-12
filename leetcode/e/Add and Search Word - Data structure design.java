@@ -19,18 +19,16 @@
  */
 
 public class WordDictionary {
-
-  private TrieNode root = new TrieNode();
-
+  TrieNode root = new TrieNode();
   // Adds a word into the data structure.
   public void addWord(String word) {
-    TrieNode curr = root;
+    TrieNode cur = root;
     for (char c : word.toCharArray()) {
-      int idx = c - 'a';
-      if (curr.edges[idx] == null) curr.edges[idx] = new TrieNode();
-      curr = curr.edges[idx];
+      int i = c - 'a';
+      if (cur.children[i] == null) cur.children[i] = new TrieNode();
+      cur = cur.children[i];
     }
-    curr.isWord = true;
+    cur.isWord = true;
   }
 
   // Returns if the word is in the data structure. A word could
@@ -39,32 +37,22 @@ public class WordDictionary {
     return search(word, root);
   }
 
-  private boolean search(String word, TrieNode node) {
-    if (word.length() == 0) return node.isWord;
-    char first = word.charAt(0);
-    if (first == '.') {
-      for (TrieNode child : node.edges) {
-        if (child != null) {
-          if (search(word.substring(1), child)) return true;
-        }
+  boolean search(String word, TrieNode cur) {
+    if (word.isEmpty()) return cur.isWord;
+    char c = word.charAt(0);
+    if (c == '.') {
+      for (int i = 0; i < 26; i++) {
+        if (cur.children[i] != null && search(word.substring(1), cur.children[i])) return true;
       }
-    } else {
-      int idx = first - 'a';
-      if (node.edges[idx] != null) {
-        if (search(word.substring(1), node.edges[idx])) return true;
-      }
+    } else if (cur.children[c - 'a'] != null) {
+      return search(word.substring(1), cur.children[c - 'a']);
     }
     return false;
   }
 
   class TrieNode {
-    boolean isWord;
-    TrieNode[] edges;
-
-    TrieNode() {
-      isWord = false;
-      edges = new TrieNode[26];
-    }
+    TrieNode[] children = new TrieNode[26];
+    boolean isWord = false;
   }
 }
 

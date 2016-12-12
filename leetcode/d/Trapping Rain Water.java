@@ -26,27 +26,27 @@ public class Solution {
   }
 }
 
-// another solution, use prefix max and suffix max
+// another solution can be generalized to 2D version
 public class Solution {
-  public int trap(List<Integer> height) {
-    int len = height.size();
-    int[] lmax = new int[len];
-    int[] rmax = new int[len];
-    int max = 0;
-    for (int i = len - 1; i >= 0; i--) {
-      rmax[i] = max;
-      max = Math.max(max, height.get(i));
+  public int trap(int[] height) {
+    int l = 0;
+    int r = height.length - 1;
+    int vol = 0;
+    while (l < r - 1) {
+      if (height[l] <= height[r]) {
+        if (height[l] > height[l + 1]) {
+          vol += height[l] - height[l + 1];
+          height[l + 1] = height[l];
+        }
+        l++;
+      } else {
+        if (height[r - 1] < height[r]) {
+          vol += height[r] - height[r- 1];
+          height[r-1] = height[r];
+        }
+        r--;
+      }
     }
-    max = 0;
-    for (int i = 0; i < len; i++) {
-      lmax[i] = max;
-      max = Math.max(max, height.get(i));
-    }
-    int res = 0;
-    for (int i = 1; i < len - 1; i++) {
-      int bar = Math.min(lmax[i], rmax[i]);
-      if (bar > height.get(i)) res += bar - height.get(i);
-    }
-    return res;
+    return vol;
   }
 }

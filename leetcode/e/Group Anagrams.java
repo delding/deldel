@@ -38,4 +38,7 @@ public class Solution {
     }
     return ret;
   }
+
+  // instead of sort, count int[26], e.g. apple, ppale -> 1a1e1l2p, use this sring as unique hash for each group
+  // or map a to z -> prime number 2, 3, 5, 7, 11 ,13, 17, 19, ... use their multiplicaion as hash to unique identify a group of anagram
 }

@@ -21,29 +21,24 @@ public class Solution {
   public ListNode reverseKGroup(ListNode head, int k) {
     ListNode dum = new ListNode(0);
     dum.next = head;
-    ListNode ret = dum;
-    while (dum != null) {
-      dum = reverseK(dum, k);
-    }
-    return ret.next;
+    ListNode pre = dum;
+    while ((dum = reverse(dum, k)) != null) {}
+    return pre.next;
   }
 
-  ListNode reverseK(ListNode dum, int k) {
-    ListNode cur = dum;
-    int kk = k;
-    while (cur.next != null && kk > 0) {
-      cur = cur.next;
-      kk--;
+  ListNode reverse(ListNode dum, int k) {
+    ListNode n = dum.next;
+    for (int i = 0; i < k; i++) {
+      if (n == null) return null;
+      n = n.next;
     }
-    if (kk > 0) return null;
-    cur = dum.next;
-    while (--k > 0) {
-      // if (cur == null || cur.next == null) return null; // list size < k, bug: don't check k while reverse, otherwise even if len < k nodes have been reversed
-      ListNode ne = cur.next;
-      cur.next = ne.next;
-      ne.next = dum.next;
-      dum.next = ne;
+    n = dum.next;
+    for (int i = 0; i < k - 1; i++) {
+      ListNode next = n.next;
+      n.next = next.next;
+      next.next = dum.next;
+      dum.next = next;
     }
-    return cur;
+    return n;
   }
 }

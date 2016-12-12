@@ -4,26 +4,26 @@
 
 public class Solution {
   public boolean isOneEditDistance(String s, String t) {
-    if (s.length() == t.length()) { // if same length, can be only differnt at on position
-      boolean diff = false;
-      for (int i = 0; i < s.length(); i++) {
-        if (s.charAt(i) != t.charAt(i)) {
-          if (diff == true) return false;
-          diff = true;
-        }
-      }
-      return diff; // Error: if diff true means diff at one char, if diff false means s and t are equal
-    } else if (s.length() == t.length() - 1) {
-      boolean erase = false;
-      for (int i = 0, j = 0; i < s.length(); i++, j++) {
+    if (Math.abs(s.length() - t.length()) > 1) return false;
+    int i = 0, j = 0;
+    if (s.length() < t.length()) return isOneEditDistance(t, s);
+    else if (s.length() >t.length()) {
+      for (; i < s.length() && j < t.length(); i++, j++) {
         if (s.charAt(i) != t.charAt(j)) {
-          if (erase == true) return false;
-          erase = true; // erase j
-          i--;
+          if (i == j) j--; // skip char in s, reexamine char in t
+          else return false;
         }
       }
-      return true; // erase last char in t
-    } else if (s.length() - 1 == t.length()) return isOneEditDistance(t, s);
-    else return false; // length diff > 1
+      return true;
+    } else {
+      boolean edited = false;
+      for (; i < s.length(); i++) {
+        if (s.charAt(i) != t.charAt(i)) {
+          if (edited) return false;
+          else edited = true;
+        }
+      }
+      return edited;
+    }
   }
 }

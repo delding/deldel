@@ -10,52 +10,38 @@
  */
 
 public class Solution {
-  // two pointers O(n)
+  // prefix sum + binary search to find ceiling
+  public int minSubArrayLen(int s, int[] nums) {
+    int[] preSum = new int[nums.length + 1];
+    for (int i = 1; i < preSum.length; i++) {
+      preSum[i] = preSum[i - 1] + nums[i - 1];
+    }
+    int len = Integer.MAX_VALUE;
+    for (int i = 0; i < preSum.length; i++) {
+      int ceiling = preSum[i] + s;
+      int l = i, r = preSum.length - 1;
+      while (l <= r) {
+        int m = l + (r - l) / 2;
+        if (preSum[m] >= ceiling) r = m - 1;
+        else l = m + 1;
+      }
+      if (l != preSum.length) { // ceiling is found
+        len = Math.min(len, l - i);
+      }
+    }
+    return len == Integer.MAX_VALUE ? 0 : len;
+  }
+
+  // two pointers
   public int minSubArrayLen1(int s, int[] nums) {
-    int l = 0, r = 0;
-    int len = 0;
-    int sum = 0;
-    for (; r < nums.length; ) {
-      sum += nums[r++];
-      while (sum >= s && l < r) { // sum up all the value from l to r-1
-        if (len == 0) len = r - l;
-        else len = Math.min(len, r - l);
+    int len = Integer.MAX_VALUE, sum = 0;
+    for (int l = 0, r = 0; r < nums.length; r++) {
+      sum += nums[r];
+      while (sum >= s) {
+        len = Math.min(len, r - l + 1);
         sum -= nums[l++];
       }
     }
-    return len;
-  }
-
-  // cumulative sum and binary search O(nlg(n)), for each sum[i] find ceiling of sum[i] + s if there is any, compute len
-  public int minSubArrayLen(int s, int[] nums) {
-    if (nums.length == 0) return 0;
-    int[] cumulative = new int[nums.length + 1]; // ERROR: must length + 1, and put 0 to first element, thus [1] - [0] is nums[0]
-    cumulative[0] = 0;
-    // cum[i] denotes sum from 0 up to i - 1
-    for (int i = 1; i <= nums.length; i++) {
-      cumulative[i] = cumulative[i - 1] + nums[i - 1];
-    }
-    int len = 0;
-    for (int i = 0; i <= nums.length; i++) {
-      int ceil = ceil(i + 1, cumulative, cumulative[i] + s);
-      if (ceil != -1) {
-        if (len == 0) len = ceil - i;
-        else len = Math.min(len, ceil - i);
-      }
-    }
-    return len;
-  }
-
-  private int ceil(int start, int[] nums, int target) {
-    int lo = start;
-    int hi = nums.length - 1;
-    while (lo <= hi) {
-      int mid = lo + (hi - lo) / 2;
-      if (nums[mid] == target) return mid;
-      else if (nums[mid] < target) lo = mid + 1;
-      else hi = mid - 1;
-    }
-    if (lo == nums.length) return -1; // all elements smaller than target
-    return lo; // Error: to find ceil must return lo, last step when lo == hi, if curr < target lo++ which makes value > target, if curr > target hi-- also means lo makes value > target
+    return len == Integer.MAX_VALUE ? 0 : len;
   }
 }

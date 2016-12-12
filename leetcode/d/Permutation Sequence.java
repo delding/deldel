@@ -14,6 +14,31 @@
 
 public class Solution {
   public String getPermutation(int n, int k) {
+    k--;
+    String ret = "";
+    boolean[] used = new boolean[n];
+    while (n > 0) {
+      int ith = k / fact(n - 1); // base = (n - 1)!
+      k %= fact(n - 1);
+      int i = 0;
+      for (; i < used.length; i = (i + 1) % used.length) {
+        if (!used[i] && ith-- == 0) break;
+      }
+      ret += (i + 1);
+      used[i] = true;
+      n--;
+    }
+    return ret;
+  }
+
+  int fact(int n) { // can store primes in an array
+    if (n == 0) return 1;
+    else return n * fact(n - 1);
+  }
+}
+
+public class Solution {
+  public String getPermutation(int n, int k) {
     int[] factorials = new int[n + 1];
     factorials[0] = 1;
     for (int i = 1; i <= n; i++) {

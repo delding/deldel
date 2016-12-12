@@ -10,6 +10,22 @@
  */
 
 public class Solution {
+  public int[] productExceptSelf(int[] nums) {
+    int[] preProd = new int[nums.length];
+    for (int i = 0; i < preProd.length; i++) {
+      if (i == 0) preProd[i] = 1;
+      else preProd[i] = preProd[i - 1] * nums[i - 1];
+    }
+    int sufProd = 1;
+    for (int i = preProd.length - 1; i >= 0; i--) {
+      preProd[i] *= sufProd;
+      sufProd *= nums[i];
+    }
+    return preProd;
+  }
+}
+
+public class Solution {
   // prefix product array and suffix product array
   public int[] productExceptSelf(int[] nums) {
     int[] prefix = new int[nums.length];

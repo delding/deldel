@@ -14,20 +14,15 @@
  * }
  */
 public class Solution {
-  int minDep = Integer.MAX_VALUE; // use a global value to check with each depth
-
   public int minDepth(TreeNode root) {
     if (root == null) return 0;
-    dfs(root, 1);
-    return minDep;
+    return dep(root);
   }
 
-  private void dfs(TreeNode root, int dep) {
-    if (root.left == null && root.right == null) {
-      minDep = Math.min(minDep, dep);
-      return;
-    }
-    if (root.left != null) dfs(root.left, dep + 1);
-    if (root.right != null) dfs(root.right, dep + 1);
+  int dep(TreeNode n) {
+    if (n.left == null && n.right == null) return 1;
+    int l = n.left == null ? Integer.MAX_VALUE : dep(n.left);
+    int r = n.right == null ? Integer.MAX_VALUE : dep(n.right);
+    return Math.min(l, r) + 1;
   }
 }

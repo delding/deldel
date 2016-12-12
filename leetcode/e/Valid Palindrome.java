@@ -8,6 +8,20 @@
 
 public class Solution {
   public boolean isPalindrome(String s) {
+    char[] cs = s.toCharArray();
+    for (int i = 0, j = cs.length - 1; i < j;) {
+      if (!Character.isLetterOrDigit(cs[i])) i++;
+      else if (!Character.isLetterOrDigit(cs[j])) j--;
+      else if (Character.isDigit(cs[i]) || Character.isDigit(cs[j])) {
+        if (cs[i++] != cs[j--]) return false;
+      } else if (Character.toLowerCase(cs[i++]) != Character.toLowerCase(cs[j--])) return false;
+    }
+    return true;
+  }
+}
+
+public class Solution {
+  public boolean isPalindrome(String s) {
     int lo = 0;
     int hi = s.length() - 1;
     while (lo < hi) {

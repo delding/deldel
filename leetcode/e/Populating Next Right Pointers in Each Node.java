@@ -51,4 +51,21 @@ public class Solution {
     connect(node.left, node);
     connect(node.right, node);
   }
+
+  // level order
+  public void connect(TreeLinkNode root) {
+    if (root == null) return;
+    Queue<TreeLinkNode> q = new ArrayDeque<>();
+    q.add(root);
+    while (!q.isEmpty()) {
+      int size = q.size();
+      while (size-- > 0) {
+        TreeLinkNode n = q.poll();
+        if (size == 0) n.next = null; // last node at current level
+        else n.next = q.peek();
+        if (n.left != null) q.add(n.left);
+        if (n.right != null) q.add(n.right);
+      }
+    }
+  }
 }

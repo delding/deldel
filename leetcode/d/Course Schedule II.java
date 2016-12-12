@@ -22,50 +22,35 @@
 
 public class Solution {
   public int[] findOrder(int numCourses, int[][] prerequisites) {
-    int[] ret = new int[numCourses];
-    Stack<Integer> postorder = new Stack();
+    Map<Integer, Set<Integer>> adj = new HashMap<>();
+    for (int i = 0; i < numCourses; i++) adj.put(i, new HashSet<Integer>());
+    for (int[] edge : prerequisites) {
+      adj.get(edge[1]).add(edge[0]);
+    }
     boolean[] visited = new boolean[numCourses];
-    boolean[] visiting = new boolean[numCourses];
-    int[][] adj = new int[numCourses][];
-    for (int i = 0; i < numCourses; i++) { // find out each vertex has how many edges
-      int edgeCount = 0;
-      for (int[] e : prerequisites) {
-        if (e[1] == i) edgeCount++;
-      }
-      adj[i] = new int[edgeCount];
-    }
-    for (int i = 0; i < numCourses; i++) { // assign edges to each vertex
-      int edgeCount = 0;
-      for (int[] e : prerequisites) {
-        if (e[1] == i) adj[i][edgeCount++] = e[0];
+    Deque<Integer> st = new ArrayDeque<>();
+    boolean can = true;
+    for (int v = 0; v < numCourses; v++) {
+      if (!visited[v]) {
+        if (!toposort(v, visited, new boolean[numCourses], adj, st)) return new int[0];
       }
     }
-    for (int i = 0; i < numCourses; i++) {
-      if (!visited[i]) {
-        if (hasCycle(i, adj, postorder, visited, visiting)) return new int[0];
-      }
-    }
-    for (int i = 0; i < numCourses; i++) {
-      ret[i] = postorder.pop();
-    }
-    return ret;
+    int[] order = new int[numCourses];
+    for (int i = 0; i < numCourses; i++) order[i] = st.pop();
+    return order;
   }
 
-
-  // dfs while check cycle
-  private boolean hasCycle(int node, int[][] adj, Stack<Integer> postorder, boolean[] visited, boolean[] visiting) {
-    visiting[node] = true;
-    for (int child : adj[node]) {
-      if (!visited[child]) {
-        if (visiting[child]) return true;
-        else {
-          if (hasCycle(child, adj, postorder, visited, visiting)) return true;
-        }
+  boolean toposort(int v, boolean[] visited, boolean[] visiting, Map<Integer, Set<Integer>> adj, Deque<Integer> st) {
+    visiting[v] = true;
+    for (int course : adj.get(v)) {
+      if (visiting[course]) return false;
+      if (!visited[course]) {
+        if (!toposort(course, visited, visiting, adj, st)) return false;
       }
     }
-    visiting[node] = false;
-    visited[node] = true;
-    postorder.push(node);
-    return false;
+    st.push(v);
+    visiting[v] = false;
+    visited[v] = true;
+    return true;
   }
 }

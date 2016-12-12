@@ -28,6 +28,47 @@
  */
 
 public class Solution {
+
+  // level order, O(1) space
+  public void connect(TreeLinkNode root) {
+    TreeLinkNode dummy = new TreeLinkNode(0);
+    TreeLinkNode pre = dummy;
+    while (root != null) {
+      if (root.left != null) {
+        pre.next = root.left;
+        pre = pre.next;
+      }
+      if (root.right != null) {
+        pre.next = root.right;
+        pre = pre.next;
+      }
+      root = root.next;
+      if (root == null) {
+        root = dummy.next; // go next level
+        dummy.next = null;
+        pre = dummy;
+      }
+    }
+  }
+
+  // level order O(n)
+  public void connect1(TreeLinkNode root) {
+    if (root == null) return;
+    Queue<TreeLinkNode> q = new ArrayDeque<>();
+    q.add(root);
+    while (!q.isEmpty()) {
+      int size = q.size();
+      while (size-- > 0) {
+        TreeLinkNode n = q.poll();
+        if (size == 0) n.next = null; // last node at current level
+        else n.next = q.peek();
+        if (n.left != null) q.add(n.left);
+        if (n.right != null) q.add(n.right);
+      }
+    }
+  }
+
+  // dfs
   public void connect(TreeLinkNode root) {
     connect(root, null);
   }
@@ -45,85 +86,8 @@ public class Solution {
       }
       parent = parent.next;
     }
-    // ERROR: Tricky Must go right first, then go left, because next point to right, going right first makes sure next points are already set when go left
+    // must go right first, then go left, because next point to right, going right first makes sure next points are already set when go left
     connect(node.right, node.next);
     connect(node.left, node);
-  }
-
-  // method 2: instead of pass parent point, handle chilren when visiting parent node, also must visit right first
-  public void connect2(TreeLinkNode root) {
-    // Note: The Solution object is instantiated only once and is reused by each test case.
-    if (root == null) {
-      return;
-    }
-    TreeLinkNode p = root.next;
-
-    while (p != null) {
-      if (p.left != null) {
-        p = p.left;
-        break;
-      }
-      if (p.right != null) {
-        p = p.right;
-        break;
-      }
-      p = p.next;
-    }
-
-    if (root.right != null) {
-      root.right.next = p;
-    }
-
-    if (root.left != null) {
-      root.left.next = root.right == null ? p : root.right;
-    }
-
-    connect2(root.right);
-    connect2(root.left);
-  }
-
-  // todo, iterative solution, constant space
-  public void connect(TreeLinkNode root) {
-    if(root == null)
-      return;
-
-    TreeLinkNode lastHead = root;//prevous level's head
-    TreeLinkNode lastCurrent = null;//previous level's pointer
-    TreeLinkNode currentHead = null;//currnet level's head
-    TreeLinkNode current = null;//current level's pointer
-
-    while(lastHead!=null){
-      lastCurrent = lastHead;
-
-      while(lastCurrent!=null){
-        //left child is not null
-        if(lastCurrent.left!=null)    {
-          if(currentHead == null){
-            currentHead = lastCurrent.left;
-            current = lastCurrent.left;
-          }else{
-            current.next = lastCurrent.left;
-            current = current.next;
-          }
-        }
-
-        //right child is not null
-        if(lastCurrent.right!=null){
-          if(currentHead == null){
-            currentHead = lastCurrent.right;
-            current = lastCurrent.right;
-          }else{
-            current.next = lastCurrent.right;
-            current = current.next;
-          }
-        }
-
-        lastCurrent = lastCurrent.next;
-      }
-
-      //update last head
-      lastHead = currentHead;
-      currentHead = null;
-    }
   }
 }

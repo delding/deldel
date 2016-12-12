@@ -13,6 +13,38 @@
 
 public class Solution {
   public void nextPermutation(int[] nums) {
+    int j = -1;
+    for (int i = nums.length - 1; i > 0; i--) {
+      if (nums[i] > nums[i - 1]) { // nums[i] > nums[i - 1] to find previousPermutation
+        j = i - 1;
+        break;
+      }
+    }
+    if (j == -1) {
+      reverse(nums, 0, nums.length - 1);
+    } else {
+      for (int i = nums.length - 1; i > j; i--) {
+        if (nums[i] > nums[j]) {
+          int tmp = nums[i];
+          nums[i] = nums[j];
+          nums[j] = tmp;
+          reverse(nums, j + 1, nums.length - 1);
+          break;
+        }
+      }
+    }
+  }
+
+  void reverse(int[] nums, int l, int r) {
+    while (l < r) {
+      int tmp = nums[l];
+      nums[l++] = nums[r];
+      nums[r--] = tmp;
+    }
+  }
+
+
+  public void nextPermutation1(int[] nums) {
     int e = nums.length - 1;
     while (e > 0) {
       if (nums[e] > nums[e - 1]) {

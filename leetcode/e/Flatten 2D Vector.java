@@ -12,40 +12,38 @@
  * By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,2,3,4,5,6].
  */
 
-public class Vector2D {
-
-  private Iterator<List<Integer>> listIter;
-  private Iterator<Integer> intIter;
-  private Integer next;
-  private boolean isNext = false;
-
+public class Vector2D implements Iterator<Integer> {
+  Iterator<List<Integer>> it;
+  Iterator<Integer> nextIt;
+  Integer next;
   public Vector2D(List<List<Integer>> vec2d) {
-    listIter = vec2d.iterator();
-  }
-
-  public int next() {
-    if (isNext) {
-      isNext = false;
-    } else goNext();
-    return next;
-  }
-
-  public boolean hasNext() {
-    goNext();
-    isNext = true;
-    return next != null;
-  }
-
-  private void goNext() {
-    while (intIter == null || !intIter.hasNext()) { // error 2: forget to check intIter == null, iterator() can return null
-      if (listIter.hasNext())
-        intIter = listIter.next().iterator(); // error 1: forget to call iterater()
-      else {
-        next = null;
-        return; // error 3: forget to return, infinite loop
+    it = vec2d.iterator();
+    if (it.hasNext()) {
+      nextIt = it.next().iterator();
+      while (next == null) {
+        if (nextIt.hasNext()) next = nextIt.next();
+        else if (it.hasNext()) nextIt = it.next().iterator();
+        else break;
       }
     }
-    next = intIter.next();
+  }
+
+  @Override
+  public Integer next() {
+    assert next != null;
+    int ret = next;
+    next = null;
+    while (next == null) {
+      if (nextIt.hasNext()) next = nextIt.next();
+      else if (it.hasNext()) nextIt = it.next().iterator();
+      else break;
+    }
+    return ret;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return next != null;
   }
 }
 

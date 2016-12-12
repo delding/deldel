@@ -12,37 +12,40 @@
  **/
 
 public class Solution {
-  public List<List<Integer>> threeSum(int[] nums) {
+  // sort
+  public List<List<Integer>> threeSum1(int[] nums) {
     Arrays.sort(nums);
     List<List<Integer>> ret = new ArrayList<>();
     for (int i = 0; i < nums.length; i++) {
       if (i > 0 && nums[i] == nums[i - 1]) continue;
-      int sum = 0 - nums[i];
-      int lo = i + 1;
-      int hi = nums.length - 1;
-      while (lo < hi) {
-        if (lo > i + 1 && nums[lo] == nums[lo - 1]) {
-          lo++;
-          continue;
-        }
-        if (hi < nums.length - 1 && nums[hi] == nums[hi + 1]) {
-          hi--;
-          continue;
-        }
-        if (nums[lo] + nums[hi] < sum) {
-          lo++;
-        } else if (nums[lo] + nums[hi] > sum) {
-          hi--;
-        } else {
-          List<Integer> cur = new ArrayList<>();
-          cur.add(nums[i]);
-          cur.add(nums[lo]);
-          cur.add(nums[hi]);
-          ret.add(cur);
-          lo++;
-          hi--;
+      int j = i + 1, k = nums.length - 1;
+      while (j < k) {
+        if (j > i + 1 && nums[j] == nums[j - 1]) j++;
+        else {
+          if (nums[i] + nums[j] + nums[k] == 0) {
+            ret.add(Arrays.asList(nums[i], nums[j], nums[k]));
+            j++;
+            k--;
+          } else if (nums[i] + nums[j] + nums[k] < 0) j++;
+          else k--;
         }
       }
+    }
+    return ret;
+  }
+
+  // hashmap, has dup
+  public List<List<Integer>> threeSum1(int[] nums) {
+    List<List<Integer>> ret = new ArrayList<>();
+    for (int i = 0; i < nums.length; i++) {
+      Set<Integer> memo = new HashSet<>();
+      for (int j = i + 1; j < nums.length; j++) { // two sum, target = -nums[i]
+        if (memo.contains(-nums[i] - nums[j])) {
+          ret.add(Arrays.asList(nums[i], -nums[i] - nums[j], nums[j]));
+        }
+        memo.add(nums[j]);
+      }
+
     }
     return ret;
   }

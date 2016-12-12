@@ -6,6 +6,18 @@
 
 public class Solution {
   public int strStr(String haystack, String needle) {
+    for (int i = 0; i <= haystack.length() - needle.length(); i++) { // the upbound of i is an optimization
+      for (int j = i, k = 0; j <= haystack.length() && k <= needle.length(); j++, k++) {
+        if (k == needle.length()) return i;
+        if (j == haystack.length() || haystack.charAt(j) != needle.charAt(k)) break;
+      }
+    }
+    return -1;
+  }
+}
+
+public class Solution {
+  public int strStr(String haystack, String needle) {
     if (needle.isEmpty()) return 0; //edge case
     int len = needle.length();
     int j = 0;

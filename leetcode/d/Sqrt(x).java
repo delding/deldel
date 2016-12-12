@@ -6,14 +6,25 @@
 
 public class Solution {
   public int mySqrt(int x) {
-    int lo = 1;
-    int hi = x;
-    while (lo <= hi) {
-      int mid = lo + (hi - lo) / 2;
-      if (mid == x / mid) return mid; // bug: don't use mid * mid == x, mid * mid can overflow
-      else if (mid < x / mid) lo = mid + 1;
-      else hi = mid - 1;
+    if (x == 0) return 0;
+    int l = 1, r = x;
+    while (l <= r) {
+      int m = l + (r - l) / 2;
+      if (m <= x / m) l = m + 1;
+      else r = m - 1; // r return floor
     }
-    return hi; // hi is the floor
+    return r;
+  }
+
+  // square root with precision
+  double sqrt(double num) {
+    double left = 0;
+    double right = num;
+    while(right - left > 10e-2) {
+      double mid = (left + right) / 2.0;
+      if (mid*mid > num) right = mid;
+      else left = mid;
+    }
+    return left;
   }
 }

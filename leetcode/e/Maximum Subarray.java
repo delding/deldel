@@ -6,13 +6,37 @@
  **/
 
 public class Solution {
-  public int maxSubArray(int[] nums) {
-    int global = nums[0];
-    int local = nums[0]; // max continuous sum ends at i
+  // finding every largest suffix sum ending at index i
+  public int maxSubArray1(int[] nums) {
+    int max = nums[0];
+    int sufSum = nums[0];
     for (int i = 1; i < nums.length; i++) {
-      local = Math.max(local + nums[i], nums[i]);
-      global = Math.max(global, local);
+      sufSum = Math.max(sufSum + nums[i], nums[i]);
+      max = Math.max(sufSum, max);
     }
-    return global;
+    return max;
+  }
+
+  // divide and conquer
+  public int maxSubArray(int[] nums) {
+    return maxSubArray(nums, 0, nums.length - 1);
+  }
+  public int maxSubArray(int[] nums, int l, int r) {
+    if (l == r) return nums[l];
+    int m = l + (r - l) / 2;
+    int midMax = nums[m];
+    int sum = midMax;
+    for (int i = m + 1; i <= r; i++) {
+      sum += nums[i];
+      midMax = Math.max(midMax, sum);
+    }
+    sum = midMax;
+    for (int i = m - 1; i >= l; i--) {
+      sum += nums[i];
+      midMax = Math.max(midMax, sum);
+    }
+    if (m - 1 >= l) midMax = Math.max(maxSubArray(nums, l, m - 1), midMax);
+    if (m + 1 <= r) midMax = Math.max(maxSubArray(nums, m + 1, r), midMax);
+    return midMax;
   }
 }

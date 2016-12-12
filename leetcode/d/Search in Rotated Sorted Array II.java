@@ -9,49 +9,6 @@
 
 public class Solution {
   // worst case O(n) when all numbers are equal and not equal to target
-  public boolean search1(int[] nums, int target) {
-    int lo = 0;
-    int hi = nums.length - 1;
-    while (lo <= hi) {
-      int mid = lo + (hi - lo) / 2;
-      if (nums[mid] == target) return true;
-      else if (nums[mid] == nums[lo] && nums[mid] == nums[hi]) {
-        lo++;
-        hi--;
-      } else if (nums[lo] == nums[mid]) {
-        if (nums[mid] > target) {
-          if (nums[hi] > nums[mid]) return false;
-          else lo = mid + 1;
-        } else {
-          lo = mid + 1;
-        }
-      } else if (nums[hi] == nums[mid]) {
-        if (nums[mid] > target) {
-          hi = mid - 1;
-        } else {
-          if (nums[lo] < nums[mid]) return false;
-          else hi = mid - 1;
-        }
-      } else {
-        if (nums[mid] > target) {
-          if (nums[hi] > nums[mid]) hi = mid - 1;
-          else {
-            if (target >= nums[lo]) hi = mid - 1;
-            else lo = mid + 1;
-          }
-        } else {
-          if (nums[mid] > nums[lo]) lo = mid + 1;
-          else {
-            if (nums[hi] >= target) lo = mid + 1;
-            else hi = mid - 1;
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  // more concise solution
   public boolean search(int[] nums, int target) {
     int lo = 0;
     int hi = nums.length - 1;
@@ -65,10 +22,35 @@ public class Solution {
         if (target > nums[mid] && target <= nums[hi]) lo = mid + 1;
         else hi = mid - 1;
       } else {
-        if (target == nums[lo]) return true;
-        else lo++;
+        if (target == nums[lo++]) return true;
       }
     }
     return false;
+  }
+
+  // search ceiling in cyclic buffer
+  int searchCeiling(int[] buffer, int target) {
+    int l = 0, r = buffer.length - 1;
+    int ceil = -1;
+    while (l <= r) {
+      int m = l + (r - l) / 2;
+      if (buffer[m] >= id && (ceil == -1 || buffer[ceil] > buffer[m])) ceil = m;
+      if (buffer[m] < buffer[r]) {
+        if (id >= buffer[m] && id <= buffer[r]) {
+          l = m + 1;
+        }
+        else { // need to consider m, but not r
+          r = m - 1;
+        }
+      } else {
+        if (id <= buffer[m] && id >= buffer[l]) { // need to consider m but not r
+          r = m - 1;
+        } else { // need to consider l, but not m
+          if (buffer[l] > id && (ceil == -1 || buffer[ceil] > buffer[l])) ceil = l;
+          l = m + 1;
+        }
+      }
+    }
+    return ceil;
   }
 }

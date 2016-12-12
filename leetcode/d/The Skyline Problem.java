@@ -18,73 +18,62 @@
  * There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...[2 3], [4 5], [7 5], [11 5], [12 7]...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...[2 3], [4 5], [12 7], ...]
  */
 
-// todo
-// Solution 1, maxQueue, has bugs    
-// sort by left point (input already did), maintain skyline height and right, if current building's left smaller than skyline right, put current
-// building's right with height in max-heap, update current skyline height to be max of two; if next buidling'left bigger than current building's right,
-// take top of max-heap until its right bigger than current position.
 public class Solution {
   public List<int[]> getSkyline(int[][] buildings) {
-    List<int[]> skyline = new ArrayList<int[]>();
-    if (buildings.length == 0) return skyline;
-    Arrays.sort(buildings, new Comparator<int[]>() {
-      public int compare(int[] b1, int[] b2) {
-        if (b1[0] == b2[0])
-          return b2[2] - b1[2]; // ERROR: if left point is equal must make the highest building comes first
-        else return b1[0] - b2[0];
-      }
-    });
-    PriorityQueue<int[]> maxq = new PriorityQueue<int[]>(1, new Comparator<int[]>() {
-      public int compare(int[] b1, int[] b2) {
-        return b2[2] - b1[2];
-      }
-    });
-    int skylineH = 0;
-    int skylineR = 0;
-    for (int i = 0; i < buildings.length; i++) {
-      int[] b = buildings[i];
-      if (skylineR == 0) {
-        skyline.add(new int[]{b[0], b[2]});
-        skylineR = b[1];
-        skylineH = b[2];
-        maxq.add(b);
-        continue;
-      }
-      while (skylineR < b[0] && !maxq.isEmpty()) { // all heights in maxq are <= skylineH
-        while (!maxq.isEmpty() && maxq.peek()[1] <= skylineR)
-          maxq.poll(); // ERROR: take out useless building
-        if (maxq.isEmpty()) break;
-        int[] bb = maxq.peek(); // ERROR: this is critical!! the building whose right point hasn't expired must stay in maxq
-        if (bb[2] < skylineH) { // ERROR: if same height, don't add strip, just update skylineR
-          skyline.add(new int[]{skylineR, bb[2]});
-          skylineH = bb[2];
-        }
-        skylineR = bb[1];
-      }
-      if (skylineR < b[0]) { // at this time maxq is empty, all buildings finish before next buidling comes
-        skyline.add(new int[]{skylineR, 0});
-        skylineH = 0;
-        skylineR = Integer.MAX_VALUE;
-      }
-      if (skylineH < b[2]) { // this time, skylineR >= b[0]
-        skyline.add(new int[]{b[0], b[2]});
-        skylineH = b[2];
-        skylineR = b[1];
-      }
-      maxq.add(b);
+    Point[] pts = new Point[buildings.length * 2];
+    int i = 0;
+    for (int[] b : buildings) {
+      pts[i++] = new Point(true, b[0], b[2]);
+      pts[i++] = new Point(false, b[1], b[2]);
     }
-    while (!maxq.isEmpty()) {
-      int[] b = maxq.poll(); // don't add building anymore, so just take out a building each time
-      if (b[1] > skylineR) {
-        if (b[2] < skylineH) { // ERROR: if same height, don't add strip, just update skylineR
-          skyline.add(new int[]{skylineR, b[2]});
-          skylineH = b[2];
+    Arrays.sort(pts);
+    TreeMap<Integer, Integer> pq = new TreeMap<>(); // key: height, val: count of this height
+    pq.put(0, 1); // put initial height 0
+    int h = 0;
+    List<int[]> ret = new ArrayList<>();
+    for (Point p : pts) {
+      int count = pq.getOrDefault(p.h, 0);
+      if (p.isLeft) {
+        if (p.h > h) {
+          h = p.h;
+          ret.add(new int[]{p.x, h});
         }
-        skylineR = b[1];
+        pq.put(p.h, count + 1);
+      } else {
+        if (count == 1) pq.remove(p.h);
+        else pq.put(p.h, count - 1);
+        int newH = pq.lastKey();
+        if (newH < h) {
+          h = newH;
+          ret.add(new int[]{p.x, h});
+        }
       }
     }
-    skyline.add(new int[]{skylineR, 0}); // ERROR: could add [0,0] if input is empty
-    return skyline;
+    return ret;
+  }
+
+  class Point implements Comparable<Point> {
+    boolean isLeft;
+    int x;
+    int h;
+
+    Point(boolean l, int xx, int hh) {
+      isLeft = l;
+      x = xx;
+      h = hh;
+    }
+
+    public int compareTo(Point that) {
+      if (this.x != that.x) {
+        return this.x - that.x;
+      } else if (this.isLeft && that.isLeft) {
+        return that.h - this.h; // both left consider higher building first
+      } else if (!this.isLeft && !that.isLeft) {
+        return this.h - that.h; // both right remove lower building first
+      } else  { // one left one right, left goes first
+        return this.isLeft ? -1 : 1;
+      }
+    }
   }
 }
 
